@@ -40,3 +40,30 @@ function firstCap(str: string): string {
 	return str.length < 1 ? '' :
 		str[0].toUpperCase() + str.substring(1).toLowerCase();
 }
+
+export function shuffle <T>(array: ReadonlyArray<T>): ReadonlyArray<T> {
+	const mutable = array.slice();
+	let currentIndex = mutable.length, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+ 
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
+ 
+		// And swap it with the current element.
+		[mutable[currentIndex], mutable[randomIndex]] = [
+		mutable[randomIndex], mutable[currentIndex]];
+	}
+ 
+	return mutable;
+}
+
+export function sameCard(a: Card, b: Card): boolean {
+	return a.suit === b.suit && a.value === b.value;
+}
+
+export function removeCard(cards: Cards, toRemove: Card): Cards {
+	return cards.filter(card => !sameCard(card, toRemove));
+}

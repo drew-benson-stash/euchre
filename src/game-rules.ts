@@ -1,7 +1,20 @@
-import { Card, CardFace, CardSuit, FaceCard, isFaceCard } from "./card-models";
+import { Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
+import { initialScores, PlayerAction, Scores, TableState, Team } from "./game-state";
 
 const TRUMP_BONUS = 1000;
 const LEAD_BONUS = 100;
+
+const WINNING_SCORE = 10;
+
+export function winningPlayer(plays: ReadonlyArray<PlayerAction>, trump: CardSuit): number {
+	const cards = plays.map(play => play.card);
+	const lead = plays[0].card.suit;
+	const sorted = cards.sort(compareCards.bind(null, trump, lead));
+	const winningCard = sorted[0];
+
+	const winningPlay = plays.find(play => sameCard(winningCard, play.card));
+	return winningPlay!.playerIndex;
+}
 
 /**
  * Compares the given cards using Euchre rules for trump and lead.
@@ -16,7 +29,7 @@ const LEAD_BONUS = 100;
  * @param lead suit that was lead this hand
  * @returns +1 if A wins, -1 if B wins, 0 if identical or indeterminate (see notes)
  */
-export function compareCards(a: Card, b: Card, trump: CardSuit, lead: CardSuit): number {
+export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card): number {
 	const rawScore = cardScore(a, trump, lead) - cardScore(b, trump, lead);
 	return Math.sign(rawScore);
 }
@@ -73,4 +86,61 @@ const sameColor: Record<CardSuit, CardSuit> = {
 	[CardSuit.SPADES]: CardSuit.CLUBS,
 	[CardSuit.DIAMONDS]: CardSuit.HEARTS,
 	[CardSuit.HEARTS]: CardSuit.DIAMONDS,
+}
+
+const euchreCards: Array<CardValue> = [9, 10, CardFace.JACK, CardFace.QUEEN, CardFace.KING, CardFace.ACE];
+
+export const deck: Cards = Object.keys(CardSuit).flatMap(suit => {
+	return euchreCards.map(value => ({value, suit: suit as CardSuit}));
+});
+
+export function deal(deck: Cards, dealer: number): TableState {
+	if (deck.length !== 24) {
+		throw new Error("Deck must contain exactly 24 cards");
+	}
+
+	const hands: ReadonlyArray<Cards> = [
+		[...deck.slice(0, 3), ...deck.slice(10, 12)],
+		[...deck.slice(3, 5), ...deck.slice(12, 15)],
+		[...deck.slice(5, 8), ...deck.slice(15, 17)],
+		[...deck.slice(8, 10), ...deck.slice(17, 20)],
+	];
+
+	return {
+		hands,
+		upCard: deck[20],
+		kitty: deck.slice(21, 24),
+	};
+}
+
+export function randomPlayer(): number {
+	return Math.floor(Math.random() * 4);
+}
+
+export function leftOfPlayer(playerIndex: number): number {
+	return (playerIndex + 1) % 4;
+}
+
+export function rightOfPlayer(playerIndex: number): number {
+	return (playerIndex - 1) % 4;
+}
+
+export function scoreHand(taken: Scores, maker: Team): Scores {
+	const winner = taken[Team.A] > taken[Team.B] ? Team.A : Team.B;
+	const score = winner === maker ? 1 : 2;
+	return {
+		...initialScores,
+		[winner]: score,
+	};
+}
+
+export function addScores(a: Scores, b: Scores): Scores {
+	return {
+		[Team.A]: a[Team.A] + b[Team.A],
+		[Team.B]: a[Team.B] + b[Team.B],
+	};
+}
+
+export function gameOver(scores: Scores): boolean {
+	return scores[Team.A] >= WINNING_SCORE || scores[Team.B] >= WINNING_SCORE;
 }
