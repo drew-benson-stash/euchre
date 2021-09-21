@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/types/types-external";
-import { Card, Cards, CardSuit, removeCard, shuffle } from "../../card-models";
-import { deal, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, gameOver } from "../../game-rules";
-import { GamePhase, initialScores, initialState, TableState, Team } from "../../game-state";
+import { Card, Cards, CardSuit, removeCard, shuffle } from "./card-models";
+import { deal as dealCards, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, gameOver } from "./game-rules";
+import { GamePhase, initialScores, initialState, TableState, Team } from "./game-state";
 
 export const gameSlice = createSlice({
 	name: 'game',
@@ -25,7 +25,7 @@ export const gameSlice = createSlice({
 		deal: state => {
 			state.dealer = leftOfPlayer(state.dealer);
 			const deck = shuffle(newDeck);
-			const table = deal(deck, state.dealer);
+			const table = dealCards(deck, state.dealer);
 			state.table = table as WritableDraft<TableState>;
 			state.currentPlayer = leftOfPlayer(state.dealer);
 			state.phase = GamePhase.BID1;
@@ -119,3 +119,15 @@ export const gameSlice = createSlice({
 	}
 });
 
+export const { 
+	addPlayers,
+	deal,
+	passBid,
+	orderUpCard,
+	callTrump,
+	dealerDiscardAndPickup,
+	initPlay,
+	playCard,
+} = gameSlice.actions;
+
+export default gameSlice.reducer;
