@@ -1,4 +1,4 @@
-import { Card, CardFace, Cards, CardSuit, CardValue } from "./card-models";
+import { Card, Cards, CardSuit } from "./card-models";
 
 export enum Team {
 	A, B

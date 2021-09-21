@@ -1,4 +1,4 @@
-import { Card as CardModel, Cards } from "../card-models";
+import { Card as CardModel, Cards } from "../game/card-models";
 import { Card } from "./Card";
 import styles from './Hand.module.css';
 
@@ -14,6 +14,7 @@ export function Hand(props: HandProps) {
 		<div className={styles.hand}>
 			{props.cards.map((card) =>
 				<Card
+					key={card.suit + card.value}
 					card={card}
 					onClick={() => cardClickHandler(card)}
 				></Card>

@@ -1,4 +1,4 @@
-import { Card as CardModel, cardName } from '../card-models';
+import { Card as CardModel, cardName } from '../game/card-models';
 
 export interface CardProps {
 	card: CardModel,
