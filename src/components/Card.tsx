@@ -2,7 +2,7 @@ import { Card as CardModel, cardName } from '../game/card-models';
 
 export interface CardProps {
 	card: CardModel,
-	onClick: () => void,
+	onClick?: () => void,
 }
 
 export function Card(props: CardProps) {

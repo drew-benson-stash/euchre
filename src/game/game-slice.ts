@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/types/types-external";
+import { RootState } from "../app/store";
 import { Card, Cards, CardSuit, removeCard, shuffle } from "./card-models";
 import { deal as dealCards, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, gameOver } from "./game-rules";
 import { GamePhase, GameState, initialScores, initialState, TableState, Team } from "./game-state";
@@ -144,5 +145,9 @@ export const {
 	initPlay,
 	playCard,
 } = gameSlice.actions;
+
+export const selectPhase = (state: RootState) => state.game.phase;
+export const selectTable = (state: RootState) => state.game.table;
+export const selectPlayers = (state: RootState) => state.game.players;
 
 export default gameSlice.reducer;
