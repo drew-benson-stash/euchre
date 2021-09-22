@@ -30,12 +30,13 @@ export function dealReducer(state: WritableDraft<GameState>): void {
 }
 
 export function passBidReducer(state: WritableDraft<GameState>): void {
-	if (state.currentPlayer === rightOfPlayer(state.dealer)) {
+	if (state.currentPlayer === state.dealer) {
 		// If state is BID2, "stick the dealer" - play cannot continue until dealer calls trump
 		if (state.phase === GamePhase.BID1) {
 			state.phase = GamePhase.BID2;
 		}
 	}
+
 	state.currentPlayer = leftOfPlayer(state.currentPlayer);
 }
 
@@ -53,8 +54,10 @@ export function callTrumpReducer(state: WritableDraft<GameState>, action: Payloa
 	state.trump = suit;
 	state.maker = state.currentPlayer;
 
-	state.phase = GamePhase.INIT_PLAY;
+	state.phase = GamePhase.PLAY_HAND;
+
 	state.currentPlayer = leftOfPlayer(state.dealer);
+	state.startPlayer = state.currentPlayer;
 }
 
 export function dealerDiscardAndPickupReducer(state: WritableDraft<GameState>, action: PayloadAction<Card>): void {
@@ -70,14 +73,10 @@ export function dealerDiscardAndPickupReducer(state: WritableDraft<GameState>, a
 	state.table.hands[state.dealer] = removeCard(dealerHand, discard) as WritableDraft<Cards>;
 	state.table.kitty = [...state.table?.kitty, discard];
 
-	state.phase = GamePhase.INIT_PLAY;
-}
+	state.phase = GamePhase.PLAY_HAND;
 
-export function initPlayReducer(state: WritableDraft<GameState>): void {
 	state.currentPlayer = leftOfPlayer(state.dealer);
 	state.startPlayer = state.currentPlayer;
-
-	state.phase = GamePhase.PLAY_HAND;
 }
 
 export function playCardReducer(state: WritableDraft<GameState>, action: PayloadAction<Card>): void {
@@ -121,7 +120,6 @@ export const gameSlice = createSlice({
 		orderUpCard: orderUpCardReducer,
 		callTrump: callTrumpReducer,
 		dealerDiscardAndPickup: dealerDiscardAndPickupReducer,
-		initPlay: initPlayReducer,
 		playCard: playCardReducer,
 	}
 });
@@ -133,7 +131,6 @@ export const {
 	orderUpCard,
 	callTrump,
 	dealerDiscardAndPickup,
-	initPlay,
 	playCard,
 } = gameSlice.actions;
 

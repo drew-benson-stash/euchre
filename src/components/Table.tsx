@@ -13,7 +13,7 @@ export function Table(props: TableProps) {
 		<div>
 			Up: <Card card={game.table?.upCard!}></Card>
 			{game.players.map(player =>
-				<Player playerIndex={player.index}></Player>
+				<Player key={player.index} playerIndex={player.index}></Player>
 			)}
 		</div>
 	);

@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Card } from "../game/card-models";
 import { addPlayers, deal, selectPlayers, selectTable } from "../game/game-slice";
+import { GamePhase } from "../game/game-state";
 import { Table } from "./Table";
 
 export function Game() {
@@ -15,20 +16,21 @@ export function Game() {
 	const playerButtonHandler = () => dispatch(addPlayers(["A", "B", "C", "D"]));
 	const dealButtonHandler = () => dispatch(deal());
 
-	if (table) {
+	if (phase === GamePhase.ADD_PLAYERS) {
+		return (
+			<div>
+				<button onClick={playerButtonHandler}>Add Players</button>
+				{players.map(p => p.name).join(", ")}
+			</div>
+		);
+	} else if (phase === GamePhase.DEAL) {
+		return <button onClick={dealButtonHandler}>Deal</button>
+	} else {
 		return (
 			<div>
 				{phase}
 				<Table></Table>
 			</div>
-		)
-	} else {
-		return (
-			<div>
-				<button onClick={playerButtonHandler}>Add Players</button>
-				{players.map(p => p.name).join(", ")}
-				<button onClick={dealButtonHandler}>Deal</button>
-			</div>
-		)
+		);
 	}
 }

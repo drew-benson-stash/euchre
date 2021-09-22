@@ -6,6 +6,9 @@ export interface CardProps {
 }
 
 export function Card(props: CardProps) {
+	if (!props.card) {
+		return null;
+	}
 
 	return (
 		<button

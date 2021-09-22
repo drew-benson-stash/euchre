@@ -22,13 +22,11 @@ export interface Scores {
 }
 
 export enum GamePhase {
-	START = "START", // Initial state
-	INIT_GAME = "INIT_GAME", // Initialize players, score, dealer, current player
+	ADD_PLAYERS = "ADD_PLAYERS", // Get player names
 	DEAL = "DEAL", // Distribute deck to players and kitty
 	BID1 = "BID1", // Players may order up card to dealer
 	BID2 = "BID2", // Players may choose trump,
 	DEALER_DISCARD = "DEALER_DISCARD",
-	INIT_PLAY = "INIT_PLAY", // Initialize trick, current player
 	PLAY_HAND = "PLAY_HAND", // Players choose a card to play until none remain
 	SCORE_ROUND = "SCORE_ROUND",
 	SCORE_HAND = "SCORE_HAND", // Score hand, if score >= 10 then end
@@ -88,7 +86,7 @@ export const emptyHands: ReadonlyArray<Cards> = [
 ];
 
 export const initialState: GameState = {
-	phase: GamePhase.START,
+	phase: GamePhase.ADD_PLAYERS,
 	players: [],
 	dealer: 0,
 	currentPlayer: 0,
