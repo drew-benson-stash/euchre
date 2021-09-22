@@ -30,11 +30,8 @@ export function dealReducer(state: WritableDraft<GameState>): void {
 }
 
 export function passBidReducer(state: WritableDraft<GameState>): void {
-	if (state.currentPlayer === state.dealer) {
-		// If state is BID2, "stick the dealer" - play cannot continue until dealer calls trump
-		if (state.phase === GamePhase.BID1) {
-			state.phase = GamePhase.BID2;
-		}
+	if (state.phase === GamePhase.BID1 && state.currentPlayer === state.dealer) {
+		state.phase = GamePhase.BID2;
 	}
 
 	state.currentPlayer = leftOfPlayer(state.currentPlayer);
@@ -108,6 +105,8 @@ export function playCardReducer(state: WritableDraft<GameState>, action: Payload
 			}
 		}
 	}
+
+	state.currentPlayer = leftOfPlayer(state.currentPlayer);
 }
 
 export const gameSlice = createSlice({

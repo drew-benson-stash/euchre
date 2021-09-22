@@ -1,4 +1,4 @@
-import { Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
+import { newCard, Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
 import { initialTableState, PlayerAction, Scores, TableState, Team } from "./game-state";
 
 const TRUMP_BONUS = 1000;
@@ -137,7 +137,7 @@ const euchreCards: Array<CardValue> = [9, 10, CardFace.JACK, CardFace.QUEEN, Car
  * Standard Euchre deck of cards: 9, 10, Jack, Queen, King, and Ace of all four suits
  */
 export const deck: Cards = Object.keys(CardSuit).flatMap(suit => {
-	return euchreCards.map(value => ({value, suit: suit as CardSuit}));
+	return euchreCards.map(value => newCard(suit as CardSuit, value));
 });
 
 /**

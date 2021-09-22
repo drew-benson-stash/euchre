@@ -20,8 +20,17 @@ export type CardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type CardValue = CardNumber | CardFace;
 
 export interface Card {
-	suit: CardSuit;
-	value: CardValue;
+	readonly suit: CardSuit;
+	readonly value: CardValue;
+	readonly key: string;
+}
+
+export function newCard(suit: CardSuit, value: CardValue) {
+	return {
+		suit,
+		value,
+		key: suit[0] + String(value)[0],
+	};
 }
 
 export interface FaceCard extends Card {

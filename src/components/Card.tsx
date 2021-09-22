@@ -3,6 +3,7 @@ import { Card as CardModel, cardName } from '../game/card-models';
 export interface CardProps {
 	card: CardModel,
 	onClick?: () => void,
+	disabled?: boolean,
 }
 
 export function Card(props: CardProps) {
@@ -12,6 +13,7 @@ export function Card(props: CardProps) {
 
 	return (
 		<button
+			disabled={props.disabled}
 			onClick={props.onClick}
 		>
 			{cardName(props.card)}

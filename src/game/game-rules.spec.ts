@@ -1,4 +1,4 @@
-import { Card, CardFace, Cards, CardSuit, shuffle } from "./card-models";
+import { newCard, CardFace, Cards, CardSuit, shuffle } from "./card-models";
 import { addScores, cardScore, deal, deck, gameOver, handOver, isLeftBower, isRightBower, isTrumpCard, leftOfPlayer, rightOfPlayer, scoreHand, winningPlayer } from "./game-rules";
 import { PlayerAction, Team } from "./game-state";
 
@@ -148,142 +148,112 @@ describe("game rules", () => {
 	});
 	describe("isTrumpCard", () => {
 		it("identifies trump card", () => {
-			expect(isTrumpCard({suit: CardSuit.SPADES, value: 6}, CardSuit.SPADES)).toBeTruthy();
+			expect(isTrumpCard(newCard(CardSuit.SPADES, 6), CardSuit.SPADES)).toBeTruthy();
 		});
 		it("identifies left bower", () => {
-			expect(isTrumpCard({suit: CardSuit.SPADES, value: CardFace.JACK}, CardSuit.CLUBS)).toBeTruthy();
+			expect(isTrumpCard(newCard(CardSuit.SPADES, CardFace.JACK), CardSuit.CLUBS)).toBeTruthy();
 		});
 		it("rejects non-trump jack", () => {
-			expect(isTrumpCard({suit: CardSuit.CLUBS, value: CardFace.JACK}, CardSuit.DIAMONDS)).toBeFalsy();
+			expect(isTrumpCard(newCard(CardSuit.CLUBS, CardFace.JACK), CardSuit.DIAMONDS)).toBeFalsy();
 		});
 	});
 	describe("isRightBower", () => {
 		it("identifies right bower", () => {
-			expect(isRightBower({suit: CardSuit.SPADES, value: CardFace.JACK}, CardSuit.SPADES)).toBeTruthy();
+			expect(isRightBower(newCard(CardSuit.SPADES, CardFace.JACK), CardSuit.SPADES)).toBeTruthy();
 		});
 		it("rejects left bower", () => {
-			expect(isRightBower({suit: CardSuit.SPADES, value: CardFace.JACK}, CardSuit.CLUBS)).toBeFalsy();
+			expect(isRightBower(newCard(CardSuit.SPADES, CardFace.JACK), CardSuit.CLUBS)).toBeFalsy();
 		});
 		it("rejects non bower", () => {
-			expect(isRightBower({suit: CardSuit.HEARTS, value: CardFace.ACE}, CardSuit.HEARTS)).toBeFalsy();
+			expect(isRightBower(newCard(CardSuit.HEARTS, CardFace.ACE), CardSuit.HEARTS)).toBeFalsy();
 		});
 	});
 	describe("isLeftBower", () => {
 		it("identifies left bower of Spades", () => {
-			expect(isLeftBower({suit: CardSuit.CLUBS, value: CardFace.JACK}, CardSuit.SPADES)).toBeTruthy();
+			expect(isLeftBower(newCard(CardSuit.CLUBS, CardFace.JACK), CardSuit.SPADES)).toBeTruthy();
 		});
 		it("identifies left bower of Diamonds", () => {
-			expect(isLeftBower({suit: CardSuit.HEARTS, value: CardFace.JACK}, CardSuit.DIAMONDS)).toBeTruthy();
+			expect(isLeftBower(newCard(CardSuit.HEARTS, CardFace.JACK), CardSuit.DIAMONDS)).toBeTruthy();
 		});
 		it("identifies left bower of Clubs", () => {
-			expect(isLeftBower({suit: CardSuit.SPADES, value: CardFace.JACK}, CardSuit.CLUBS)).toBeTruthy();
+			expect(isLeftBower(newCard(CardSuit.SPADES, CardFace.JACK), CardSuit.CLUBS)).toBeTruthy();
 		});
 		it("identifies left bower of Hearts", () => {
-			expect(isLeftBower({suit: CardSuit.DIAMONDS, value: CardFace.JACK}, CardSuit.HEARTS)).toBeTruthy();
+			expect(isLeftBower(newCard(CardSuit.DIAMONDS, CardFace.JACK), CardSuit.HEARTS)).toBeTruthy();
 		});
 		it("rejects right bower", () => {
-			expect(isLeftBower({suit: CardSuit.DIAMONDS, value: CardFace.JACK}, CardSuit.DIAMONDS)).toBeFalsy();
+			expect(isLeftBower(newCard(CardSuit.DIAMONDS, CardFace.JACK), CardSuit.DIAMONDS)).toBeFalsy();
 		});
 		it("rejects non bower", () => {
-			expect(isLeftBower({suit: CardSuit.CLUBS, value: CardFace.ACE}, CardSuit.CLUBS)).toBeFalsy();
+			expect(isLeftBower(newCard(CardSuit.CLUBS, CardFace.ACE), CardSuit.CLUBS)).toBeFalsy();
 		});
 	});
 	describe("cardScore", () => {
 		it("scores non-trump non-lead number card", () => {
-			const card: Card = {
-				suit: CardSuit.SPADES,
-				value: 9
-			};
+			const card = newCard(CardSuit.SPADES, 9);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.HEARTS);
 
 			expect(score).toEqual(card.value);
 		});
 		it("scores non-trump lead number card", () => {
-			const card: Card = {
-				suit: CardSuit.SPADES,
-				value: 8
-			};
+			const card = newCard(CardSuit.SPADES, 8);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.SPADES);
 
 			expect(score).toEqual(card.value as number + 100);
 		});
 		it("scores trump lead number card", () => {
-			const card: Card = {
-				suit: CardSuit.SPADES,
-				value: 7
-			};
+			const card = newCard(CardSuit.SPADES, 7);
 
 			const score = cardScore(card, CardSuit.SPADES, CardSuit.SPADES);
 
 			expect(score).toEqual(card.value as number + 100 + 1000);
 		});
 		it("scores trump non-lead number card", () => {
-			const card: Card = {
-				suit: CardSuit.SPADES,
-				value: 6
-			};
+			const card = newCard(CardSuit.SPADES, 6);
 
 			const score = cardScore(card, CardSuit.SPADES, CardSuit.CLUBS);
 
 			expect(score).toEqual(card.value as number + 1000);
 		});
 		it("scores non-trump non-lead face card", () => {
-			const card: Card = {
-				suit: CardSuit.SPADES,
-				value: CardFace.QUEEN
-			};
+			const card = newCard(CardSuit.SPADES, CardFace.QUEEN);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.HEARTS);
 
 			expect(score).toEqual(12);
 		});
 		it("scores non-trump lead face card", () => {
-			const card: Card = {
-				suit: CardSuit.HEARTS,
-				value: CardFace.KING
-			};
+			const card = newCard(CardSuit.HEARTS, CardFace.KING);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.HEARTS);
 
 			expect(score).toEqual(13 + 100);
 		});
 		it("scores trump lead face card", () => {
-			const card: Card = {
-				suit: CardSuit.CLUBS,
-				value: CardFace.ACE
-			};
+			const card = newCard(CardSuit.CLUBS, CardFace.ACE);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.CLUBS);
 
 			expect(score).toEqual(13 + 100 + 1000);
 		});
 		it("scores trump non-lead face card", () => {
-			const card: Card = {
-				suit: CardSuit.DIAMONDS,
-				value: CardFace.QUEEN
-			};
+			const card = newCard(CardSuit.DIAMONDS, CardFace.QUEEN);
 
 			const score = cardScore(card, CardSuit.DIAMONDS, CardSuit.SPADES);
 
 			expect(score).toEqual(11 + 1000);
 		});
 		it("scores left bower", () => {
-			const card: Card = {
-				suit: CardSuit.HEARTS,
-				value: CardFace.JACK
-			};
+			const card = newCard(CardSuit.HEARTS, CardFace.JACK);
 
 			const score = cardScore(card, CardSuit.DIAMONDS, CardSuit.SPADES);
 
 			expect(score).toEqual(14 + 1000);
 		});
 		it("scores right bower", () => {
-			const card: Card = {
-				suit: CardSuit.CLUBS,
-				value: CardFace.JACK
-			};
+			const card = newCard(CardSuit.CLUBS, CardFace.JACK);
 
 			const score = cardScore(card, CardSuit.CLUBS, CardSuit.SPADES);
 
@@ -293,10 +263,10 @@ describe("game rules", () => {
 	describe("winningPlayer", () => {
 		it("right bower wins", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.CLUBS, value: CardFace.JACK},},
-				{player: 3, card: {suit: CardSuit.HEARTS, value: CardFace.JACK},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.JACK},},
-				{player: 1, card: {suit: CardSuit.SPADES, value: CardFace.JACK},},
+				{player: 2, card: newCard(CardSuit.CLUBS, CardFace.JACK),},
+				{player: 3, card: newCard(CardSuit.HEARTS, CardFace.JACK),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.JACK),},
+				{player: 1, card: newCard(CardSuit.SPADES, CardFace.JACK),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.DIAMONDS);
@@ -305,10 +275,10 @@ describe("game rules", () => {
 		});
 		it("left bower wins", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.CLUBS, value: CardFace.JACK},},
-				{player: 3, card: {suit: CardSuit.HEARTS, value: CardFace.JACK},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.ACE},},
-				{player: 1, card: {suit: CardSuit.SPADES, value: CardFace.JACK},},
+				{player: 2, card: newCard(CardSuit.CLUBS, CardFace.JACK),},
+				{player: 3, card: newCard(CardSuit.HEARTS, CardFace.JACK),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+				{player: 1, card: newCard(CardSuit.SPADES, CardFace.JACK),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.DIAMONDS);
@@ -317,10 +287,10 @@ describe("game rules", () => {
 		});
 		it("Low trump wins", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.CLUBS, value: CardFace.ACE},},
-				{player: 3, card: {suit: CardSuit.HEARTS, value: CardFace.ACE},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.ACE},},
-				{player: 1, card: {suit: CardSuit.SPADES, value: 9},},
+				{player: 2, card: newCard(CardSuit.CLUBS, CardFace.ACE),},
+				{player: 3, card: newCard(CardSuit.HEARTS, CardFace.ACE),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+				{player: 1, card: newCard(CardSuit.SPADES, 9),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.SPADES);
@@ -329,10 +299,10 @@ describe("game rules", () => {
 		});
 		it("Low lead wins (no trump)", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.CLUBS, value: 9},},
-				{player: 3, card: {suit: CardSuit.HEARTS, value: CardFace.ACE},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.ACE},},
-				{player: 1, card: {suit: CardSuit.DIAMONDS, value: CardFace.KING},},
+				{player: 2, card: newCard(CardSuit.CLUBS, 9),},
+				{player: 3, card: newCard(CardSuit.HEARTS, CardFace.ACE),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+				{player: 1, card: newCard(CardSuit.DIAMONDS, CardFace.KING),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.SPADES);
@@ -341,10 +311,10 @@ describe("game rules", () => {
 		});
 		it("Second-lowest lead wins (no trump)", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.CLUBS, value: 9},},
-				{player: 3, card: {suit: CardSuit.HEARTS, value: CardFace.ACE},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.ACE},},
-				{player: 1, card: {suit: CardSuit.CLUBS, value: 10},},
+				{player: 2, card: newCard(CardSuit.CLUBS, 9),},
+				{player: 3, card: newCard(CardSuit.HEARTS, CardFace.ACE),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+				{player: 1, card: newCard(CardSuit.CLUBS, 10),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.SPADES);
@@ -353,10 +323,10 @@ describe("game rules", () => {
 		});
 		it("Lead ace wins (no trump)", () => {
 			const plays: ReadonlyArray<PlayerAction> = [
-				{player: 2, card: {suit: CardSuit.DIAMONDS, value: 9},},
-				{player: 3, card: {suit: CardSuit.DIAMONDS, value: CardFace.KING},},
-				{player: 0, card: {suit: CardSuit.DIAMONDS, value: CardFace.ACE},},
-				{player: 1, card: {suit: CardSuit.DIAMONDS, value: CardFace.QUEEN},},
+				{player: 2, card: newCard(CardSuit.DIAMONDS, 9),},
+				{player: 3, card: newCard(CardSuit.DIAMONDS, CardFace.KING),},
+				{player: 0, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+				{player: 1, card: newCard(CardSuit.DIAMONDS, CardFace.QUEEN),},
 			];
 
 			const winner = winningPlayer(plays, CardSuit.SPADES);
