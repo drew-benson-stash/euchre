@@ -6,6 +6,9 @@ import { Table } from "./Table";
 export function Game() {
 	const table = useAppSelector(selectTable);
 	const players = useAppSelector(selectPlayers);
+	const phase = useAppSelector(state => state.game.phase);
+
+
 	const dispatch = useAppDispatch();
 
 	const handCardClickHandler = (player: number, card: Card): void => {console.log(player, card)};
@@ -14,11 +17,10 @@ export function Game() {
 
 	if (table) {
 		return (
-			<Table
-				players={players}
-				state={table}
-				onHandCardClick={handCardClickHandler}
-			></Table>
+			<div>
+				{phase}
+				<Table></Table>
+			</div>
 		)
 	} else {
 		return (
