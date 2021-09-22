@@ -6,15 +6,22 @@ const LEAD_BONUS = 100;
 
 const WINNING_SCORE = 10;
 
-export function winningPlayer(plays: ReadonlyArray<PlayerAction>, trump: CardSuit): number {
-	const cards = plays.map(play => play.card);
-	const lead = plays[0].card.suit;
+/**
+ * Determines which player won this trick
+ * 
+ * @param trick list of cards played and by whom
+ * @param trump suit that ranks above all others for this hand
+ * @returns number of the player who played the winning card this trick
+ */
+export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump: CardSuit): number {
+	const cards = trick.map(play => play.card);
+	const lead = trick[0].card.suit;
 	const sorted = cards.sort(compareCards.bind(null, trump, lead));
 
 	// Last card has highest value, thus is the winner!
 	const winningCard = sorted[sorted.length - 1];
 
-	const winningPlay = plays.find(play => sameCard(winningCard, play.card));
+	const winningPlay = trick.find(play => sameCard(winningCard, play.card));
 	return winningPlay!.player;
 }
 
@@ -27,8 +34,8 @@ export function winningPlayer(plays: ReadonlyArray<PlayerAction>, trump: CardSui
  * 
  * @param a card A
  * @param b card B
- * @param trump current trump suit
- * @param lead suit that was lead this hand
+ * @param trump suit that ranks above all others for this hand
+ * @param lead suit of the first card played this trick
  * @returns +1 if A wins, -1 if B wins, 0 if identical or indeterminate (see notes)
  */
 export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card): number {
@@ -36,6 +43,15 @@ export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card):
 	return Math.sign(rawScore);
 }
 
+/**
+ * Returns a numeric score that ranks this card compared to other cards.
+ * This score is only valid compared to other cards given the same suit and lead.
+ * 
+ * @param card the card to score
+ * @param trump suit that ranks above all others for this hand
+ * @param lead suit of the first card played this trick
+ * @returns a number that ranks this card compared to other cards given the same suit and lead
+ */
 export function cardScore(card: Card, trump: CardSuit, lead: CardSuit): number {
 	const isTrump = isTrumpCard(card, trump);
 
@@ -54,14 +70,38 @@ function faceScore(card: FaceCard, isTrump: boolean): number {
 	return isTrump ? faceToNumberTrump[card.value] : faceToNumber[card.value];
 }
 
+/**
+ * Returns true if given card is the left bower:
+ * The Jack of the suit the same color as the trump suit
+ * 
+ * @param card 
+ * @param trump suit that ranks above all others for this hand
+ * @returns true if `card` is the left bower
+ */
 export function isLeftBower(card: Card, trump: CardSuit): boolean {
 	return card.value === CardFace.JACK && card.suit === sameColor[trump];
 }
 
+/**
+ * Returns true if given card is the right bower:
+ * The Jack of the same suit as trump
+ * 
+ * @param card 
+ * @param trump suit that ranks above all others for this hand
+ * @returns true if `card` is the right bower
+ */
 export function isRightBower(card: Card, trump: CardSuit): boolean {
 	return card.value === CardFace.JACK && card.suit === trump;
 }
 
+/**
+ * Returns true if the given card belongs to the trump suit.
+ * This includes the left bower, which has a different suit but belongs to the trump suit for the hand
+ * 
+ * @param card 
+ * @param trump suit that ranks above all others for this hand
+ * @returns true if `card` belongs to the trump suit
+ */
 export function isTrumpCard(card: Card, trump: CardSuit) {
 	return (card.suit === trump) || isLeftBower(card, trump);
 }
@@ -92,10 +132,27 @@ const sameColor: Record<CardSuit, CardSuit> = {
 
 const euchreCards: Array<CardValue> = [9, 10, CardFace.JACK, CardFace.QUEEN, CardFace.KING, CardFace.ACE];
 
+/**
+ * Standard Euchre deck of cards: 9, 10, Jack, Queen, King, and Ace of all four suits
+ */
 export const deck: Cards = Object.keys(CardSuit).flatMap(suit => {
 	return euchreCards.map(value => ({value, suit: suit as CardSuit}));
 });
 
+/**
+ * Distributes the given deck of 24 cards to four players,
+ * with one up card (card up for trump) and the remaining three cards in the kitty.
+ * 
+ * An effort was made to simulate traditional Euchre deals (3-2-3-2-2-3-2-3)
+ * though this doesn't actually matter if the deck is truly random.
+ * 
+ * Note this function does *not* shuffle the cards,
+ * `deck` is dealt in the order given for repeatability
+ * 
+ * @param deck the cards to deal to the players
+ * @param dealer the number of the dealing player
+ * @returns a table state containing the four hands, kitty, and up card
+ */
 export function deal(deck: Cards, dealer: number): TableState {
 	if (deck.length !== 24) {
 		throw new Error("Deck must contain exactly 24 cards");
@@ -115,19 +172,45 @@ export function deal(deck: Cards, dealer: number): TableState {
 	};
 }
 
+/**
+ * Returns a random player index (0-3)
+ *
+ * @returns a random player index
+ */
 export function randomPlayer(): number {
 	return Math.floor(Math.random() * 4);
 }
 
+/**
+ * Returns the index of the player to the "left" of the given player.
+ * In game play, this is the player whose turn usually comes *after* the given player.
+ * 
+ * @param player 
+ * @returns index of the player to the "left" of the given player
+ */
 export function leftOfPlayer(player: number): number {
 	return (player + 1) % 4;
 }
 
+/**
+ * Returns the index of the player to the "right" of the given player.
+ * In game play, this is the player whose turn usually comes *before* the given player.
+ * 
+ * @param player 
+ * @returns index of the player to the "right" of the given player
+ */
 export function rightOfPlayer(player: number): number {
 	// Javascript modulo is not well-defined for negative numbers
 	return player <= 0 ? 3 : (player - 1);
 }
 
+/**
+ * Scores a hand of play based on the number of tricks taken by each team
+ * 
+ * @param taken the number of tricks taken by each team
+ * @param maker the team that decided Trump for this hand
+ * @returns the scores of each team as a result of this hand
+ */
 export function scoreHand(taken: Scores, maker: Team): Scores {
 	const winner = taken[Team.A] > taken[Team.B] ? Team.A : Team.B;
 	const score = winner === maker ? 1 : 2;
@@ -137,6 +220,13 @@ export function scoreHand(taken: Scores, maker: Team): Scores {
 	};
 }
 
+/**
+ * Sums the scores of each team
+ * 
+ * @param a 
+ * @param b 
+ * @returns Sum of `a` and `b`
+ */
 export function addScores(a: Scores, b: Scores): Scores {
 	return {
 		[Team.A]: a[Team.A] + b[Team.A],
@@ -144,6 +234,12 @@ export function addScores(a: Scores, b: Scores): Scores {
 	};
 }
 
+/**
+ * Returns true if either team has achived victory
+ * 
+ * @param scores the current scores for each team
+ * @returns true if one team has achieved victory
+ */
 export function gameOver(scores: Scores): boolean {
 	return scores[Team.A] >= WINNING_SCORE || scores[Team.B] >= WINNING_SCORE;
 }
