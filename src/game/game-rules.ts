@@ -10,10 +10,12 @@ export function winningPlayer(plays: ReadonlyArray<PlayerAction>, trump: CardSui
 	const cards = plays.map(play => play.card);
 	const lead = plays[0].card.suit;
 	const sorted = cards.sort(compareCards.bind(null, trump, lead));
-	const winningCard = sorted[0];
+
+	// Last card has highest value, thus is the winner!
+	const winningCard = sorted[sorted.length - 1];
 
 	const winningPlay = plays.find(play => sameCard(winningCard, play.card));
-	return winningPlay!.playerIndex;
+	return winningPlay!.player;
 }
 
 /**
@@ -34,7 +36,7 @@ export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card):
 	return Math.sign(rawScore);
 }
 
-function cardScore(card: Card, trump: CardSuit, lead: CardSuit): number {
+export function cardScore(card: Card, trump: CardSuit, lead: CardSuit): number {
 	const isTrump = isTrumpCard(card, trump);
 
 	const score = isFaceCard(card) ? faceScore(card, isTrump) : card.value as number;
@@ -117,12 +119,13 @@ export function randomPlayer(): number {
 	return Math.floor(Math.random() * 4);
 }
 
-export function leftOfPlayer(playerIndex: number): number {
-	return (playerIndex + 1) % 4;
+export function leftOfPlayer(player: number): number {
+	return (player + 1) % 4;
 }
 
-export function rightOfPlayer(playerIndex: number): number {
-	return (playerIndex - 1) % 4;
+export function rightOfPlayer(player: number): number {
+	// Javascript modulo is not well-defined for negative numbers
+	return player <= 0 ? 3 : (player - 1);
 }
 
 export function scoreHand(taken: Scores, maker: Team): Scores {

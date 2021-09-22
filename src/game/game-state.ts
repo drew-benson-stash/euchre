@@ -11,7 +11,7 @@ export interface Player {
 }
 
 export interface PlayerAction {
-	readonly playerIndex: number;
+	readonly player: number;
 	readonly card: Card;
 }
 
