@@ -1,19 +1,57 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Cards } from "../game/card-models";
-import { selectPhase } from "../game/game-slice";
-import { Player as PlayerModel } from "../game/game-state";
+import { Card, Cards, CardSuit } from "../game/card-models";
+import { callTrump, orderUpCard, passBid, selectPhase, selectPlayer, selectPlayerHand } from "../game/game-slice";
+import { GamePhase, Player as PlayerModel } from "../game/game-state";
+import { Hand } from "./Hand";
 
 export interface PlayerProps {
-	player: PlayerModel;
-	hand: Cards;
+	playerIndex: number;
 }
 
 export function Player(props: PlayerProps) {
-	const phase = useAppSelector(selectPhase);
+	const pi = props.playerIndex;
+	const game = useAppSelector(state => state.game);
+
+	const phase = game.phase;
+	const player = game.players[pi];
+	const hand = game.table?.hands[pi];
+	const isDealer = game.dealer === pi;
+	const isCurrent = game.currentPlayer === pi;
+
+	const dispatch = useAppDispatch();
+
+	const showPassBid = isCurrent && (phase === GamePhase.BID1 || (!isDealer && phase === GamePhase.BID2));
+	const showOrderUp = isCurrent && phase === GamePhase.BID1;
+	const showCallTrump = isCurrent && phase === GamePhase.BID2;
+
+	const passBidButton = () =>
+		<button onClick={() => dispatch(passBid())}>
+			Pass
+		</button>
+
+	const orderUpButton = () => 
+		<button onClick={() => dispatch(orderUpCard())}>
+			OrderUp
+		</button>
+
+	const callTrumpButtons = () =>
+		Object.keys(CardSuit).map(suit => 
+			<button onClick={() => dispatch(callTrump(suit as CardSuit))}>
+				{suit}
+			</button>
+		);
 
 	return (
 		<div>
-			Hello
+			<span>{player.name}</span>
+			{isDealer ? <span>(D)</span> : null}
+			{isCurrent ? <span>{"<-"}</span> : null}
+
+			{hand ? <Hand playerIndex={pi}></Hand> : null}
+
+			{showPassBid ? passBidButton() : null}
+			{showOrderUp ? orderUpButton() : null}
+			{showCallTrump ? callTrumpButtons() : null}
 		</div>
-	)
+	);
 }
