@@ -92,7 +92,7 @@ export function playCardReducer(state: WritableDraft<GameState>, action: Payload
 		// End of trick - score plays
 		const winner = winningPlayer(state.table.plays, state.trump!);
 
-		state.table.tricks[winner].push(state.table.plays.map(play => play.card));
+		state.table.tricks[winner].push(state.table.plays);
 		state.table.plays = [];
 
 		if (handOver(state.table.tricks)) {

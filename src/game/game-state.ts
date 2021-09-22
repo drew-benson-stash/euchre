@@ -16,6 +16,8 @@ export interface PlayerAction {
 	readonly card: Card;
 }
 
+export type Trick = ReadonlyArray<PlayerAction>;
+
 export interface Scores {
 	readonly [Team.A]: number;
 	readonly [Team.B]: number;
@@ -48,8 +50,7 @@ export interface TableState {
 	readonly kitty: Cards;
 	readonly hands: ReadonlyArray<Cards>;
 	readonly plays: ReadonlyArray<PlayerAction>;
-	// tricks[playerIndex][trick][cards]
-	readonly tricks: ReadonlyArray<ReadonlyArray<Cards>>;
+	readonly tricks: ReadonlyArray<ReadonlyArray<Trick>>;
 }
 
 export interface GameState {

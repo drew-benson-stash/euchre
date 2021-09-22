@@ -1,8 +1,8 @@
 import { newCard, CardFace, Cards, CardSuit, shuffle } from "./card-models";
 import { addScores, cardScore, deal, deck, gameOver, handOver, isLeftBower, isRightBower, isTrumpCard, leftOfPlayer, rightOfPlayer, scoreHand, winningPlayer } from "./game-rules";
-import { PlayerAction, Team } from "./game-state";
+import { PlayerAction, Team, Trick } from "./game-state";
 
-function tricks(...wins: Array<number>): Array<Array<Cards>> {
+function tricks(...wins: Array<number>): Array<Array<Trick>> {
 	return wins.map(w => Array(w));
 }
 

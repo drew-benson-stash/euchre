@@ -1,5 +1,5 @@
 import { newCard, Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
-import { initialTableState, PlayerAction, Scores, TableState, Team } from "./game-state";
+import { initialTableState, PlayerAction, Scores, TableState, Team, Trick } from "./game-state";
 
 const TRUMP_BONUS = 1000;
 const LEAD_BONUS = 100;
@@ -213,7 +213,7 @@ export function rightOfPlayer(player: number): number {
  * @param maker the team that decided Trump for this hand
  * @returns the scores of each team as a result of this hand
  */
-export function scoreHand(tricks: ReadonlyArray<ReadonlyArray<Cards>>, maker: number): Scores {
+export function scoreHand(tricks: ReadonlyArray<ReadonlyArray<Trick>>, maker: number): Scores {
 	const taken = tricks.map(tricks => tricks.length);
 
 	const takenA = taken[0] + taken[2];
@@ -265,7 +265,7 @@ export function gameOver(scores: Scores): boolean {
  * 
  * @returns true if all cards have been played for this hand
  */
-export function handOver(tricks: ReadonlyArray<ReadonlyArray<Cards>>): boolean {
+export function handOver(tricks: ReadonlyArray<ReadonlyArray<Trick>>): boolean {
 	const tricksTaken = tricks.reduce((count, tricks) => count + tricks.length, 0);
 	return tricksTaken >= TRICKS_PER_HAND;
 }
