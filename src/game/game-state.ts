@@ -1,7 +1,8 @@
 import { Card, Cards, CardSuit } from "./card-models";
 
 export enum Team {
-	A, B
+	A = "A",
+	B = "B",
 }
 
 export interface Player {
@@ -21,17 +22,17 @@ export interface Scores {
 }
 
 export enum GamePhase {
-	START, // Initial state
-	INIT_GAME, // Initialize players, score, dealer, current player
-	DEAL, // Distribute deck to players and kitty
-	BID1, // Players may order up card to dealer
-	BID2, // Players may choose trump,
-	DEALER_DISCARD,
-	INIT_PLAY, // Initialize round, current player
-	PLAY_HAND, // Players choose a card to play until none remain
-	SCORE_ROUND,
-	SCORE_HAND, // Score hand, if score >= 10 then end
-	END, // Final state
+	START = "START", // Initial state
+	INIT_GAME = "INIT_GAME", // Initialize players, score, dealer, current player
+	DEAL = "DEAL", // Distribute deck to players and kitty
+	BID1 = "BID1", // Players may order up card to dealer
+	BID2 = "BID2", // Players may choose trump,
+	DEALER_DISCARD = "DEALER_DISCARD",
+	INIT_PLAY = "INIT_PLAY", // Initialize round, current player
+	PLAY_HAND = "PLAY_HAND", // Players choose a card to play until none remain
+	SCORE_ROUND = "SCORE_ROUND",
+	SCORE_HAND = "SCORE_HAND", // Score hand, if score >= 10 then end
+	END = "END", // Final state
 }
 
 export interface TableState {
