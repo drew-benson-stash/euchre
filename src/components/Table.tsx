@@ -1,8 +1,5 @@
 import { useAppSelector } from "../app/hooks";
-import { Card as CardModel } from "../game/card-models";
-import { Player as PlayerModel, TableState } from "../game/game-state";
 import { Card } from "./Card";
-import { Hand } from "./Hand";
 import { Player } from "./Player";
 
 export interface TableProps {

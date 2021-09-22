@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Card, Cards, CardSuit } from "../game/card-models";
-import { callTrump, orderUpCard, passBid, selectPhase, selectPlayer, selectPlayerHand } from "../game/game-slice";
-import { GamePhase, Player as PlayerModel } from "../game/game-state";
+import { CardSuit } from "../game/card-models";
+import { callTrump, orderUpCard, passBid } from "../game/game-slice";
+import { GamePhase } from "../game/game-state";
 import { Hand } from "./Hand";
 
 export interface PlayerProps {

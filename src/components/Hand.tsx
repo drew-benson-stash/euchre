@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Card as CardModel, Cards } from "../game/card-models";
-import { dealerDiscardAndPickup, playCard, playCardReducer } from "../game/game-slice";
-import { GamePhase, Player } from "../game/game-state";
+import { Card as CardModel } from "../game/card-models";
+import { dealerDiscardAndPickup, playCard } from "../game/game-slice";
+import { GamePhase } from "../game/game-state";
 import { Card } from "./Card";
 import styles from './Hand.module.css';
 

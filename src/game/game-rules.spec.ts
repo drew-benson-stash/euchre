@@ -1,6 +1,10 @@
 import { Card, CardFace, Cards, CardSuit, shuffle } from "./card-models";
-import { addScores, cardScore, compareCards, deal, deck, gameOver, isLeftBower, isRightBower, isTrumpCard, leftOfPlayer, rightOfPlayer, scoreHand, winningPlayer } from "./game-rules";
+import { addScores, cardScore, deal, deck, gameOver, handOver, isLeftBower, isRightBower, isTrumpCard, leftOfPlayer, rightOfPlayer, scoreHand, winningPlayer } from "./game-rules";
 import { PlayerAction, Team } from "./game-state";
+
+function tricks(...wins: Array<number>): Array<Array<Cards>> {
+	return wins.map(w => Array(w));
+}
 
 describe("game rules", () => {
 	describe("gameOver", () => {
@@ -45,36 +49,34 @@ describe("game rules", () => {
 	});
 	describe("scoreHand", () => {
 		it("Scores team A win", () => {
-			const result = scoreHand({
-				[Team.A]: 3,
-				[Team.B]: 2,
-			}, Team.A);
+			const result = scoreHand(tricks(3, 2, 0, 0), 0);
 			expect(result[Team.A]).toEqual(1);
 			expect(result[Team.B]).toEqual(0);
 		});
 		it("Scores team B win", () => {
-			const result = scoreHand({
-				[Team.A]: 1,
-				[Team.B]: 4,
-			}, Team.B);
+			const result = scoreHand(tricks(1, 2, 0, 2), 3);
 			expect(result[Team.A]).toEqual(0);
 			expect(result[Team.B]).toEqual(1);
 		});
 		it("Scores team A euchre", () => {
-			const result = scoreHand({
-				[Team.A]: 2,
-				[Team.B]: 3,
-			}, Team.A);
+			const result = scoreHand(tricks(1, 1, 1, 2), 2);
 			expect(result[Team.A]).toEqual(0);
 			expect(result[Team.B]).toEqual(2);
 		});
 		it("Scores team B euchre", () => {
-			const result = scoreHand({
-				[Team.A]: 4,
-				[Team.B]: 1,
-			}, Team.B);
+			const result = scoreHand(tricks(0, 0, 4, 1), 1);
 			expect(result[Team.A]).toEqual(2);
 			expect(result[Team.B]).toEqual(0);
+		});
+		it("Scores team A sweep", () => {
+			const result = scoreHand(tricks(2, 0, 3, 0), 2);
+			expect(result[Team.A]).toEqual(2);
+			expect(result[Team.B]).toEqual(0);
+		});
+		it("Scores team B sweep", () => {
+			const result = scoreHand(tricks(0, 5, 0, 0), 1);
+			expect(result[Team.A]).toEqual(0);
+			expect(result[Team.B]).toEqual(2);
 		});
 	});
 	describe("rightOfPlayer", () => {
@@ -360,6 +362,20 @@ describe("game rules", () => {
 			const winner = winningPlayer(plays, CardSuit.SPADES);
 
 			expect(winner).toBe(0);
+		});
+	});
+	describe("handOver", () => {
+		it("returns false if no tricks taken", () => {
+			expect(handOver(tricks(0, 0, 0, 0))).toBeFalsy();
+		});
+		it("returns true if 5 tricks taken by single player", () => {
+			expect(handOver(tricks(0, 5, 0, 0))).toBeTruthy();
+		});
+		it("returns false if one taken by each player", () => {
+			expect(handOver(tricks(1, 1, 1, 1))).toBeFalsy();
+		});
+		it("returns true if five tricks taken total", () => {
+			expect(handOver(tricks(1, 2, 2, 0))).toBeTruthy();
 		});
 	});
 });

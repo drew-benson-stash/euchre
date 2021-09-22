@@ -1,10 +1,11 @@
 import { Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
-import { initialScores, PlayerAction, Scores, TableState, Team } from "./game-state";
+import { initialTableState, PlayerAction, Scores, TableState, Team } from "./game-state";
 
 const TRUMP_BONUS = 1000;
 const LEAD_BONUS = 100;
 
 const WINNING_SCORE = 10;
+const TRICKS_PER_HAND = 5;
 
 /**
  * Determines which player won this trick
@@ -166,6 +167,7 @@ export function deal(deck: Cards, dealer: number): TableState {
 	];
 
 	return {
+		...initialTableState,
 		hands,
 		upCard: deck[20],
 		kitty: deck.slice(21, 24),
@@ -211,14 +213,28 @@ export function rightOfPlayer(player: number): number {
  * @param maker the team that decided Trump for this hand
  * @returns the scores of each team as a result of this hand
  */
-export function scoreHand(taken: Scores, maker: Team): Scores {
-	const winner = taken[Team.A] > taken[Team.B] ? Team.A : Team.B;
-	const score = winner === maker ? 1 : 2;
+export function scoreHand(tricks: ReadonlyArray<ReadonlyArray<Cards>>, maker: number): Scores {
+	const taken = tricks.map(tricks => tricks.length);
+
+	const takenA = taken[0] + taken[2];
+	const takenB = taken[1] + taken[3];
+
+	const makingTeam = (maker % 2 === 0) ? Team.A : Team.B;
+
 	return {
-		...initialScores,
-		[winner]: score,
-	};
+		[Team.A]: scoreTeam(takenA, Team.A, makingTeam),
+		[Team.B]: scoreTeam(takenB, Team.B, makingTeam),
+	}
 }
+
+function scoreTeam(taken: number, team: Team, maker: Team): number {
+	const isMaker = team === maker;
+
+	return (!isMaker && taken >= 3) ? 2 : // euchre
+		(isMaker && taken === 5) ? 2 : // win all
+		(isMaker && taken >= 3) ? 1 : // win most
+		0; // lose
+};
 
 /**
  * Sums the scores of each team
@@ -243,3 +259,14 @@ export function addScores(a: Scores, b: Scores): Scores {
 export function gameOver(scores: Scores): boolean {
 	return scores[Team.A] >= WINNING_SCORE || scores[Team.B] >= WINNING_SCORE;
 }
+
+/**
+ * Returns true if all cards have been played for this hand
+ * 
+ * @returns true if all cards have been played for this hand
+ */
+export function handOver(tricks: ReadonlyArray<ReadonlyArray<Cards>>): boolean {
+	const tricksTaken = tricks.reduce((count, tricks) => count + tricks.length, 0);
+	return tricksTaken >= TRICKS_PER_HAND;
+}
+

@@ -28,17 +28,30 @@ export enum GamePhase {
 	BID1 = "BID1", // Players may order up card to dealer
 	BID2 = "BID2", // Players may choose trump,
 	DEALER_DISCARD = "DEALER_DISCARD",
-	INIT_PLAY = "INIT_PLAY", // Initialize round, current player
+	INIT_PLAY = "INIT_PLAY", // Initialize trick, current player
 	PLAY_HAND = "PLAY_HAND", // Players choose a card to play until none remain
 	SCORE_ROUND = "SCORE_ROUND",
 	SCORE_HAND = "SCORE_HAND", // Score hand, if score >= 10 then end
 	END = "END", // Final state
 }
 
+export const initialTableState = {
+	kitty: [],
+	hands: [],
+	plays: [],
+	tricks: [[], [], [], []],
+}
+
+/**
+ * The "Table" contains all extant cards
+ */
 export interface TableState {
 	readonly upCard?: Card;
 	readonly kitty: Cards;
 	readonly hands: ReadonlyArray<Cards>;
+	readonly plays: ReadonlyArray<PlayerAction>;
+	// tricks[playerIndex][trick][cards]
+	readonly tricks: ReadonlyArray<ReadonlyArray<Cards>>;
 }
 
 export interface GameState {
@@ -46,17 +59,21 @@ export interface GameState {
 
 	readonly players: ReadonlyArray<Player>;
 	readonly dealer: number;
-	readonly currentPlayer: number; //offset from dealer (i.e. dealer = 0, left of dealer = 1 ...)
 
-	readonly table?: TableState;
+	readonly table: TableState;
+	readonly currentPlayer: number;
+
 	readonly trump?: CardSuit;
 	readonly maker?: number;
-	readonly startPlayer?: number;
-	readonly round: number; // 0-4
-	readonly discard: Cards;
 
-	readonly plays: ReadonlyArray<PlayerAction>;
-	readonly taken: Scores;
+	/**
+	 * Player who starts the trick
+	 * At the start of the hand, it's the player left of dealer
+	 * After that, it's the player who won the previous trick
+	 * 
+	 * Counted 
+	 */
+	readonly startPlayer?: number;
 
 	readonly scores: Scores;
 }
@@ -68,16 +85,13 @@ export const initialScores: Scores = {
 
 export const emptyHands: ReadonlyArray<Cards> = [
 	[], [], [], []
-]
+];
 
 export const initialState: GameState = {
 	phase: GamePhase.START,
 	players: [],
 	dealer: 0,
 	currentPlayer: 0,
-	discard: [],
-	plays: [],
-	round: 0,
-	taken: initialScores,
 	scores: initialScores,
+	table: initialTableState,
 };
