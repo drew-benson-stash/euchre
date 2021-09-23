@@ -3,6 +3,7 @@ import { CardSuit } from "../game/card-models";
 import { callTrump, orderUpCard, passBid } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { Hand } from "./Hand";
+import styles from "./Player.module.css";
 
 export interface PlayerProps {
 	playerIndex: number;
@@ -43,8 +44,10 @@ export function Player(props: PlayerProps) {
 
 	return (
 		<div>
-			<h4>{player.name}</h4>
-			{isDealer ? <span> (Dealer)</span> : null}
+			<span className={styles.playerName}>{player.name}</span>
+			<span className={styles.dealerLabel}>
+				{isDealer ? <span> (Dealer)</span> : null}
+			</span>
 			{/* {isCurrent ? <span>{"<-"}</span> : null} */}
 
 			{showPassBid ? passBidButton() : null}

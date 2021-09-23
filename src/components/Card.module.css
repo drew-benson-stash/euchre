@@ -1,13 +1,22 @@
 .card {
 	display: inline-block;
-	width: 32px;
+	width: 48px;
 	cursor: pointer;
 	position: relative;
+	filter: drop-shadow(16px 16px 8px black);
+	top: 0;
+	transition-property: top, filter;
+	transition-duration: 0.1s;
+}
+
+.card:hover:not(.cardDisabled) {
+	top: -16px;
+	filter: drop-shadow(0px 16px 8px black);
 }
 
 .cardDisabled {
 	cursor: not-allowed;
-	filter: brightness(0.5);
+	filter: brightness(0.75) drop-shadow(4px 4px 4px black);
 }
 
 .cardImage {
