@@ -1,0 +1,10 @@
+.table {
+    border: 20px solid rgb(63, 29, 10);
+	background-color: rgb(166, 211, 166);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+}

@@ -30,7 +30,6 @@ export function Hand(props: HandProps) {
 
 	return (
 		<div className={styles.hand}>
-			<h3>{player.name}</h3>
 			{cards?.map((card) =>
 				<Card
 					key={card.suit + card.value}
