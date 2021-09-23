@@ -1,4 +1,5 @@
-import { Card as CardModel, cardName } from '../game/card-models';
+import { Card as CardModel, cardToFileName } from '../game/card-models';
+import styles from "./Card.module.css";
 
 export interface CardProps {
 	card: CardModel,
@@ -11,12 +12,16 @@ export function Card(props: CardProps) {
 		return null;
 	}
 
+	const cardFileName = cardToFileName(props.card);
+
 	return (
-		<button
-			disabled={props.disabled}
+		<img
+			src={`cards/${cardFileName}`}
+			className={styles.card}
 			onClick={props.onClick}
+			
 		>
-			{cardName(props.card)}
-		</button>
+			
+		</img>
 	);
 }

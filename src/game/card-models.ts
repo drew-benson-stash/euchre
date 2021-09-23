@@ -15,7 +15,7 @@ export enum CardFace {
 	JOKER = "JOKER"
 }
 
-export type CardNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type CardNumber = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export type CardValue = CardNumber | CardFace;
 
@@ -26,11 +26,16 @@ export interface Card {
 }
 
 export function newCard(suit: CardSuit, value: CardValue) {
+	const v = typeof value === "number" ? value : value[0];
 	return {
 		suit,
 		value,
-		key: suit[0] + String(value)[0],
+		key: suit[0] + v,
 	};
+}
+
+export function cardToFileName(card: Card): string {
+	return `${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
 }
 
 export interface FaceCard extends Card {
