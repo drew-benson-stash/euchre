@@ -14,8 +14,8 @@ export function Hand(props: HandProps) {
 	const player = game.players[props.playerIndex];
 	const cards = game.table?.hands[player.index];
 
-	const currentPlayer = props.playerIndex === game.currentPlayer && game.phase === GamePhase.PLAY_HAND;
-	const dealerDiscard = props.playerIndex === game.dealer && game.phase === GamePhase.DEALER_DISCARD
+	const currentPlayer = player.index === game.currentPlayer && game.phase === GamePhase.PLAY_HAND;
+	const dealerDiscard = player.index === game.dealer && game.phase === GamePhase.DEALER_DISCARD
 
 	const dispatch = useAppDispatch();
 

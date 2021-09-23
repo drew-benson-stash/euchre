@@ -10,6 +10,10 @@
 	color: white;
 	border-style: outset;
 	box-shadow: inset 0 0 200px black;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 }
 
 .player {
@@ -19,7 +23,7 @@
 }
 
 .top {
-	top: 20px;
+	top: 38px;
 }
 
 .bottom {
@@ -27,9 +31,9 @@
 }
 
 .left {
-	left: 20px;
+	left: 42px;
 }
 
 .right {
-	right: 120px;
+	right: 42px;
 }

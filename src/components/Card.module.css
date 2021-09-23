@@ -1,6 +1,6 @@
 .card {
 	display: inline-block;
-	width: 48px;
+	width: 42px;
 	cursor: pointer;
 	position: relative;
 	filter: drop-shadow(16px 16px 8px black);
@@ -10,7 +10,7 @@
 }
 
 .card:hover:not(.cardDisabled) {
-	top: -16px;
+	top: -32px;
 	filter: drop-shadow(0px 16px 8px black);
 }
 

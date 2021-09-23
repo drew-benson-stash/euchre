@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { CardSuit } from "../game/card-models";
-import { callTrump, orderUpCard, passBid } from "../game/game-slice";
+import { Card, CardSuit } from "../game/card-models";
+import { callTrump, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
+import { CardStack } from "./CardStack";
 import { Hand } from "./Hand";
 import styles from "./Player.module.css";
 
@@ -15,15 +16,30 @@ export function Player(props: PlayerProps) {
 
 	const phase = game.phase;
 	const player = game.players[pi];
-	const hand = game.table?.hands[pi];
+	const hand = game.table.hands[pi];
+
 	const isDealer = game.dealer === pi;
 	const isCurrent = game.currentPlayer === pi;
 
-	const dispatch = useAppDispatch();
-
+	// TODO:
+	const showDeal = true;
 	const showPassBid = isCurrent && (phase === GamePhase.BID1 || (!isDealer && phase === GamePhase.BID2));
 	const showOrderUp = isCurrent && phase === GamePhase.BID1;
 	const showCallTrump = isCurrent && phase === GamePhase.BID2;
+
+	const canPlayCard = isCurrent && phase === GamePhase.PLAY_HAND;
+	const dealerDiscard = isDealer && phase === GamePhase.DEALER_DISCARD;
+
+	const dispatch = useAppDispatch();
+
+	const cardClickHandler = (card: Card) => {
+		if (canPlayCard) {
+			dispatch(playCard(card));
+		}
+		if (dealerDiscard) {
+			dispatch(dealerDiscardAndPickup(card));
+		}
+	};
 
 	const passBidButton = () =>
 		<button onClick={() => dispatch(passBid())}>
@@ -32,29 +48,39 @@ export function Player(props: PlayerProps) {
 
 	const orderUpButton = () => 
 		<button onClick={() => dispatch(orderUpCard())}>
-			OrderUp
+			{isDealer ? "Pick up" : "Order up"}
 		</button>
 
 	const callTrumpButtons = () =>
-		Object.keys(CardSuit).map(suit => 
-			<button onClick={() => dispatch(callTrump(suit as CardSuit))}>
-				{suit}
-			</button>
-		);
+		<div className={styles.suitButtons}>
+			{Object.keys(CardSuit).map(suit => 
+				<button onClick={() => dispatch(callTrump(suit as CardSuit))}>
+					{suit}
+				</button>
+			)}
+		</div>
 
 	return (
-		<div>
-			<span className={styles.playerName}>{player.name}</span>
-			<span className={styles.dealerLabel}>
-				{isDealer ? <span> (Dealer)</span> : null}
-			</span>
-			{/* {isCurrent ? <span>{"<-"}</span> : null} */}
+		<div className={styles.player}>
+			<CardStack
+				cards={hand}
+				disabled={!(canPlayCard || dealerDiscard)}
+				onCardClick={cardClickHandler}
+			></CardStack>
 
-			{showPassBid ? passBidButton() : null}
-			{showOrderUp ? orderUpButton() : null}
-			{showCallTrump ? callTrumpButtons() : null}
+			<div className={styles.playerLabel}>
+				{isDealer ? <img className={styles.dealerIcon} src="dealer_hand.png"></img> : null}
+				<span className={styles.playerName}>
+					{player.name}
+				</span>
+			</div>
 
-			{hand ? <Hand playerIndex={pi}></Hand> : null}
+			<div className={styles.playerActions}>
+				{showPassBid ? passBidButton() : null}
+				{showOrderUp ? orderUpButton() : null}
+				{showCallTrump ? callTrumpButtons() : null}
+			</div>
+
 		</div>
 	);
 }

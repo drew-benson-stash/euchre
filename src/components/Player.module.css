@@ -1,8 +1,33 @@
+.player {
+	width: 300px;
+}
+
 .playerName {
 	font-size: 18x;
 	font-weight: bold;
 }
 
-.dealerLabel {
-	font-style: italic;
+.playerLabel {
+	text-align: center;
+}
+
+.playerActions {
+	text-align: center;
+}
+
+.playerActions button {
+	width: 75px;
+	height: 36px;
+	margin: 10px;
+}
+
+.suitButtons button {
+	width: 100px;
+	margin: 0;
+}
+
+.dealerIcon {
+	height: 30px;
+	top: 7px;
+	position: relative;
 }
