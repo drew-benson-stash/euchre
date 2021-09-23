@@ -1,10 +1,33 @@
 .table {
     border: 20px solid rgb(63, 29, 10);
-	background-color: rgb(166, 211, 166);
+	background-color: rgb(0 45 0);
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     overflow: auto;
+	color: white;
+}
+
+.player {
+	position: absolute;
+	min-width: 100px;
+	min-height: 128px;
+}
+
+.top {
+	top: 20px;
+}
+
+.bottom {
+	bottom: 20px;
+}
+
+.left {
+	left: 20px;
+}
+
+.right {
+	right: 120px;
 }

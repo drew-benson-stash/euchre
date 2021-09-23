@@ -43,15 +43,15 @@ export function Player(props: PlayerProps) {
 
 	return (
 		<div>
-			<span>{player.name}</span>
-			{isDealer ? <span>(D)</span> : null}
-			{isCurrent ? <span>{"<-"}</span> : null}
-
-			{hand ? <Hand playerIndex={pi}></Hand> : null}
+			<h4>{player.name}</h4>
+			{isDealer ? <span> (Dealer)</span> : null}
+			{/* {isCurrent ? <span>{"<-"}</span> : null} */}
 
 			{showPassBid ? passBidButton() : null}
 			{showOrderUp ? orderUpButton() : null}
 			{showCallTrump ? callTrumpButtons() : null}
+
+			{hand ? <Hand playerIndex={pi}></Hand> : null}
 		</div>
 	);
 }

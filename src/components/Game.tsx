@@ -13,7 +13,7 @@ export function Game() {
 	const dispatch = useAppDispatch();
 
 	const handCardClickHandler = (player: number, card: Card): void => {console.log(player, card)};
-	const playerButtonHandler = () => dispatch(addPlayers(["A", "B", "C", "D"]));
+	const playerButtonHandler = () => dispatch(addPlayers(["Anne", "Bob", "Charlie", "Diane"]));
 	const dealButtonHandler = () => dispatch(deal());
 
 	if (phase === GamePhase.ADD_PLAYERS) {

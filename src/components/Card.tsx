@@ -15,13 +15,12 @@ export function Card(props: CardProps) {
 	const cardFileName = cardToFileName(props.card);
 
 	return (
-		<img
-			src={`cards/${cardFileName}`}
-			className={styles.card}
-			onClick={props.onClick}
-			
-		>
-			
-		</img>
+		<div className={styles.card + (props.disabled ? ` ${styles.cardDisabled}` : '')}>
+			<img
+				className={styles.cardImage}
+				src={`cards/${cardFileName}`}
+				onClick={props.onClick}
+			></img>
+		</div>
 	);
 }

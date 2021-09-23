@@ -19,9 +19,23 @@ export function Table(props: TableProps) {
 			<div>
 				Kitty: {game.table.kitty.map(card => <Card key={card.key} card={card} disabled={true}></Card>)}
 			</div>
-			{game.players.map(player =>
-				<Player key={player.index} playerIndex={player.index}></Player>
-			)}
+
+			<div className={`${styles.player} ${styles.top} ${styles.left}`}>
+				<Player playerIndex={0}></Player>
+			</div>
+
+			<div className={`${styles.player} ${styles.top} ${styles.right}`}>
+				<Player playerIndex={1}></Player>
+			</div>
+
+			<div className={`${styles.player} ${styles.bottom} ${styles.right}`}>
+				<Player playerIndex={2}></Player>
+			</div>
+
+			<div className={`${styles.player} ${styles.bottom} ${styles.left}`}>
+				<Player playerIndex={3}></Player>
+			</div>
+
 
 			<ol>
 				Played: {game.table.plays.map(play =>
