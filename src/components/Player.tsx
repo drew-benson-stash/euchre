@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Card, CardSuit } from "../game/card-models";
-import { callTrump, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
+import { callTrump, deal, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { CardStack } from "./CardStack";
 import styles from "./Player.module.css";
 import { MiniStack } from "./MiniStack";
 
 export interface PlayerProps {
-	playerIndex: number;
+	readonly playerIndex: number;
 }
 
 export function Player(props: PlayerProps) {
@@ -22,8 +22,7 @@ export function Player(props: PlayerProps) {
 	const isDealer = game.dealer === pi;
 	const isCurrent = game.currentPlayer === pi;
 
-	// TODO:
-	const showDeal = true;
+	const showDeal = phase === GamePhase.DEAL && isDealer;
 	const showPassBid = isCurrent && (phase === GamePhase.BID1 || (!isDealer && phase === GamePhase.BID2));
 	const showOrderUp = isCurrent && phase === GamePhase.BID1;
 	const showCallTrump = isCurrent && phase === GamePhase.BID2;
@@ -61,6 +60,11 @@ export function Player(props: PlayerProps) {
 			)}
 		</div>
 
+	const dealButton = () =>
+		<button onClick={() => dispatch(deal())}>
+			Deal
+		</button>
+
 	return (
 		<div className={styles.player}>
 			<CardStack
@@ -72,11 +76,12 @@ export function Player(props: PlayerProps) {
 			<div className={styles.playerLabel}>
 				{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}
 				<span className={styles.playerName}>
-					{player.name}
+					{player.name} {game.phase === GamePhase.PLAY_HAND ? `(${tricks.length})` : ''}
 				</span>
 			</div>
 
 			<div className={styles.playerActions}>
+				{showDeal ? dealButton() : null}
 				{showPassBid ? passBidButton() : null}
 				{showOrderUp ? orderUpButton() : null}
 				{showCallTrump ? callTrumpButtons() : null}
