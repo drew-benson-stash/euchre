@@ -1,26 +1,40 @@
 import { useAppSelector } from "../app/hooks";
-import { cardName } from "../game/card-models";
+import { suitToFilename } from "../game/card-models";
+import { GamePhase } from "../game/game-state";
 import { Card } from "./Card";
 import { CardStack } from "./CardStack";
+import { MiniCard } from "./MiniCard";
+import { MiniStack } from "./MiniStack";
 import { PlayedCards } from "./PlayedCards";
 import { Player } from "./Player";
 import { Scores } from "./Scores";
 import styles from "./Table.module.css";
 
-export interface TableProps {
-}
-
-export function Table(props: TableProps) {
-	// const handCardClickHandler = (player: number, card: CardModel) => props.onHandCardClick(player, card);
+export function Table() {
 	const game = useAppSelector(state => state.game);
 
 	return (
 		<div className={styles.table}>
-			<div>
-				<Card card={game.table?.upCard!} disabled={true}></Card>
+
+			<div className={styles.topOfScreen}>
+				{game.phase === GamePhase.PLAY_HAND ? <MiniStack cards={game.table.kitty}></MiniStack> : null}
+
+				{game.table.kitty.length && game.phase !== GamePhase.PLAY_HAND ?
+					<CardStack cards={game.table.kitty} disabled={true} splay={false}></CardStack> : null
+				}
+
+				{game.trump && game.phase === GamePhase.PLAY_HAND ?
+						<img className={styles.trumpSuit} src={suitToFilename[game.trump]}></img> : null
+				}
 			</div>
-			<div>
-				<CardStack cards={game.table.kitty} disabled={true} splay={false}></CardStack>
+
+			<div className={styles.bottomOfScreen}>
+				<Scores></Scores>
+			</div>
+
+			<div className={styles.centerField}>
+				<div><Card card={game.table?.upCard} disabled={true}></Card></div>
+				<PlayedCards></PlayedCards>
 			</div>
 
 			<div className={`${styles.player} ${styles.top} ${styles.left}`}>
@@ -35,10 +49,6 @@ export function Table(props: TableProps) {
 			<div className={`${styles.player} ${styles.bottom} ${styles.left}`}>
 				<Player playerIndex={3}></Player>
 			</div>
-
-			<PlayedCards></PlayedCards>
-
-			<Scores></Scores>
 		</div>
 	);
 }

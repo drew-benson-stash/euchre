@@ -36,3 +36,29 @@
 .right {
 	right: 42px;
 }
+
+.trumpSuit {
+	width: 36px;
+	filter: drop-shadow(0 0 6px white);
+	margin-top: 16px;
+}
+
+.topOfScreen {
+	position: absolute;
+	top: 4px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.centerField {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.bottomOfScreen {
+	position: absolute;
+	bottom: 0px;
+}
