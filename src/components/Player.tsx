@@ -3,8 +3,8 @@ import { Card, CardSuit } from "../game/card-models";
 import { callTrump, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { CardStack } from "./CardStack";
-import { Hand } from "./Hand";
 import styles from "./Player.module.css";
+import { MiniStack } from "./MiniStack";
 
 export interface PlayerProps {
 	playerIndex: number;
@@ -16,7 +16,8 @@ export function Player(props: PlayerProps) {
 
 	const phase = game.phase;
 	const player = game.players[pi];
-	const hand = game.table.hands[pi];
+	const hand = game.table.hands[pi] || [];
+	const tricks = game.table.tricks[pi] || [];
 
 	const isDealer = game.dealer === pi;
 	const isCurrent = game.currentPlayer === pi;
@@ -80,6 +81,8 @@ export function Player(props: PlayerProps) {
 				{showOrderUp ? orderUpButton() : null}
 				{showCallTrump ? callTrumpButtons() : null}
 			</div>
+
+			{tricks.map((trick, i) => <MiniStack key={i} cards={trick.map(t => t.card)}></MiniStack>)}
 
 		</div>
 	);

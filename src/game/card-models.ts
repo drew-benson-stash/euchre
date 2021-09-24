@@ -26,16 +26,15 @@ export interface Card {
 }
 
 export function newCard(suit: CardSuit, value: CardValue) {
-	const v = typeof value === "number" ? value : value[0];
 	return {
 		suit,
 		value,
-		key: suit[0] + v,
+		key: suit[0] + shortValue(value),
 	};
 }
 
-export function cardToFileName(card: Card): string {
-	return `${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
+export function shortValue(value: CardValue): string {
+	return typeof value === "number" ? String(value) : value[0].toUpperCase();
 }
 
 export interface FaceCard extends Card {
@@ -80,4 +79,11 @@ export function sameCard(a: Card, b: Card): boolean {
 
 export function removeCard(cards: Cards, toRemove: Card): Cards {
 	return cards.filter(card => !sameCard(card, toRemove));
+}
+
+export const suitToFilename: Record<CardSuit, string> = {
+	[CardSuit.SPADES]: 'images/suits/spades.svg',
+	[CardSuit.DIAMONDS]: 'images/suits/diamonds.svg',
+	[CardSuit.CLUBS]: 'images/suits/clubs.svg',
+	[CardSuit.HEARTS]: 'images/suits/hearts.svg',
 }
