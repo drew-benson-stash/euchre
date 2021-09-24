@@ -16,8 +16,10 @@ const TRICKS_PER_HAND = 5;
  */
 export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump: CardSuit): number {
 	const cards = trick.map(play => play.card);
-	const lead = trick[0].card.suit;
-	const sorted = cards.sort(compareCards.bind(null, trump, lead));
+	const leadCard = trick[0].card;
+	// Left bower IS trump suit for the duration of the hand
+	const leadSuit = isLeftBower(leadCard, trump) ? trump : leadCard.suit;
+	const sorted = cards.sort(compareCards.bind(null, trump, leadSuit));
 
 	// Last card has highest value, thus is the winner!
 	const winningCard = sorted[sorted.length - 1];
@@ -55,14 +57,15 @@ export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card):
  */
 export function cardScore(card: Card, trump: CardSuit, lead: CardSuit): number {
 	const isTrump = isTrumpCard(card, trump);
+	const isLeft = isLeftBower(card, trump);
 
 	const score = isFaceCard(card) ? faceScore(card, isTrump) : card.value as number;
 
-	const leadBonus = (card.suit === lead) ? LEAD_BONUS : 0;
+	const leadBonus = (card.suit === lead || (isLeft && lead === trump)) ? LEAD_BONUS : 0;
 	const trumpBonus = isTrumpCard(card, trump) ? TRUMP_BONUS : 0;
 
 	// Left bower is scored one less than right bower
-	const leftBowerPenalty = isLeftBower(card, trump) ? -1 : 0;
+	const leftBowerPenalty = isLeft ? -1 : 0;
 
 	return score + trumpBonus + leadBonus + leftBowerPenalty;
 }

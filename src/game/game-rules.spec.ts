@@ -333,6 +333,30 @@ describe("game rules", () => {
 
 			expect(winner).toBe(0);
 		});
+		it("Right bower wins against Left bower lead", () => {
+			const plays: ReadonlyArray<PlayerAction> = [
+				{player: 0, card: newCard(CardSuit.HEARTS, CardFace.JACK),},
+				{player: 1, card: newCard(CardSuit.CLUBS, CardFace.JACK),},
+				{player: 2, card: newCard(CardSuit.DIAMONDS, 9),},
+				{player: 3, card: newCard(CardSuit.DIAMONDS, CardFace.JACK),},
+			];
+
+			const winner = winningPlayer(plays, CardSuit.DIAMONDS);
+
+			expect(winner).toBe(3);
+		});
+		it("Left bower lead wins against trump Ace", () => {
+			const plays: ReadonlyArray<PlayerAction> = [
+				{player: 0, card: newCard(CardSuit.HEARTS, CardFace.JACK),},
+				{player: 1, card: newCard(CardSuit.CLUBS, CardFace.JACK),},
+				{player: 2, card: newCard(CardSuit.DIAMONDS, 9),},
+				{player: 3, card: newCard(CardSuit.DIAMONDS, CardFace.ACE),},
+			];
+
+			const winner = winningPlayer(plays, CardSuit.DIAMONDS);
+
+			expect(winner).toBe(0);
+		});
 	});
 	describe("handOver", () => {
 		it("returns false if no tricks taken", () => {
