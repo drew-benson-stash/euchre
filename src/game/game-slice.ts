@@ -51,10 +51,13 @@ export function callTrumpReducer(state: WritableDraft<GameState>, action: Payloa
 	state.trump = suit;
 	state.maker = state.currentPlayer;
 
-	state.phase = GamePhase.PLAY_HAND;
-
+	state.table.kitty.push(state.table.upCard!);
+	state.table.upCard = undefined;
+                                                                                                                                                                
 	state.currentPlayer = leftOfPlayer(state.dealer);
 	state.startPlayer = state.currentPlayer;
+
+	state.phase = GamePhase.PLAY_HAND;
 }
 
 export function dealerDiscardAndPickupReducer(state: WritableDraft<GameState>, action: PayloadAction<Card>): void {
