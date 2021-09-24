@@ -36,3 +36,24 @@
 	top: 7px;
 	position: relative;
 }
+
+.trickList {
+	display: flex;
+	flex-direction: column;
+}
+
+.trickList div {
+	margin-bottom: 10px;
+}
+
+.playerContainer {
+	display: flex;
+}
+
+.tricksOnLeft {
+	flex-direction: row-reverse;
+}
+
+.tricksOnLeft .trickList {
+	margin-right: 10px;
+}

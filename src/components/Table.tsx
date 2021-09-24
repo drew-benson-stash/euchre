@@ -17,11 +17,7 @@ export function Table() {
 		<div className={styles.table}>
 
 			<div className={styles.topOfScreen}>
-				{game.phase === GamePhase.PLAY_HAND ? <MiniStack cards={game.table.kitty}></MiniStack> : null}
-
-				{game.table.kitty.length && game.phase !== GamePhase.PLAY_HAND ?
-					<CardStack cards={game.table.kitty} disabled={true} splay={false}></CardStack> : null
-				}
+				<MiniStack cards={game.table.kitty}></MiniStack>
 
 				{game.trump && game.phase === GamePhase.PLAY_HAND ?
 						<img className={styles.trumpSuit} src={suitToFilename[game.trump]}></img> : null
@@ -41,10 +37,10 @@ export function Table() {
 				<Player playerIndex={0}></Player>
 			</div>
 			<div className={`${styles.player} ${styles.top} ${styles.right}`}>
-				<Player playerIndex={1}></Player>
+				<Player playerIndex={1} tricksOnLeft={true}></Player>
 			</div>
 			<div className={`${styles.player} ${styles.bottom} ${styles.right}`}>
-				<Player playerIndex={2}></Player>
+				<Player playerIndex={2} tricksOnLeft={true}></Player>
 			</div>
 			<div className={`${styles.player} ${styles.bottom} ${styles.left}`}>
 				<Player playerIndex={3}></Player>

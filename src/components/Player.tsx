@@ -8,6 +8,7 @@ import { MiniStack } from "./MiniStack";
 
 export interface PlayerProps {
 	readonly playerIndex: number;
+	readonly tricksOnLeft?: boolean;
 }
 
 export function Player(props: PlayerProps) {
@@ -53,7 +54,7 @@ export function Player(props: PlayerProps) {
 
 	const callTrumpButtons = () =>
 		<div className={styles.suitButtons}>
-			{Object.keys(CardSuit).map(suit => 
+				{Object.keys(CardSuit).map(suit => 
 				<button onClick={() => dispatch(callTrump(suit as CardSuit))}>
 					{suit}
 				</button>
@@ -66,29 +67,30 @@ export function Player(props: PlayerProps) {
 		</button>
 
 	return (
-		<div className={styles.player}>
-			<CardStack
-				cards={hand}
-				disabled={!(canPlayCard || dealerDiscard)}
-				onCardClick={cardClickHandler}
-			></CardStack>
+		<div className={styles.playerContainer + (props.tricksOnLeft ? ` ${styles.tricksOnLeft}` : '')}>
+			<div className={styles.player}>
+				<CardStack
+					cards={hand}
+					disabled={!(canPlayCard || dealerDiscard)}
+					onCardClick={cardClickHandler}
+				></CardStack>
 
-			<div className={styles.playerLabel}>
-				{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}
-				<span className={styles.playerName}>
-					{player.name} {game.phase === GamePhase.PLAY_HAND ? `(${tricks.length})` : ''}
-				</span>
+				<div className={styles.playerLabel}>
+					{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}
+					<span className={styles.playerName}>{player.name}</span>
+				</div>
+
+				<div className={styles.playerActions}>
+					{showDeal ? dealButton() : null}
+					{showPassBid ? passBidButton() : null}
+					{showOrderUp ? orderUpButton() : null}
+					{showCallTrump ? callTrumpButtons() : null}
+				</div>
 			</div>
 
-			<div className={styles.playerActions}>
-				{showDeal ? dealButton() : null}
-				{showPassBid ? passBidButton() : null}
-				{showOrderUp ? orderUpButton() : null}
-				{showCallTrump ? callTrumpButtons() : null}
+			<div className={styles.trickList}>
+				{tricks.map((trick, i) => <MiniStack key={i} cards={trick.map(t => t.card)}></MiniStack>)}
 			</div>
-
-			{tricks.map((trick, i) => <MiniStack key={i} cards={trick.map(t => t.card)}></MiniStack>)}
-
 		</div>
 	);
 }
