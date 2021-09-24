@@ -10,6 +10,7 @@ export function PlayedCards(props: any) {
 				<Card
 					key={play.card.key}
 					card={play.card}
+					disabled={true}
 				></Card>
 			)}
 		</div>

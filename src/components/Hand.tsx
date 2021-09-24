@@ -6,7 +6,7 @@ import { Card } from "./Card";
 import styles from './Hand.module.css';
 
 export interface HandProps {
-	playerIndex: number;
+	readonly playerIndex: number;
 }
 
 export function Hand(props: HandProps) {

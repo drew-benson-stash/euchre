@@ -13,10 +13,10 @@ export function Scores() {
 	return (
 		<div>
 			<div>
-				Team A ({`${players[0].name} & ${players[2].name}`}): {scores[Team.A]}
+				{`${players[0].name} & ${players[2].name}`}: {scores[Team.A]}
 			</div>
 			<div>
-				Team B ({`${players[1].name} & ${players[3].name}`}): {scores[Team.B]}
+				{`${players[1].name} & ${players[3].name}`}: {scores[Team.B]}
 			</div>
 		</div>
 	)
