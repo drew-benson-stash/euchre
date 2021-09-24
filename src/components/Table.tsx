@@ -4,6 +4,7 @@ import { Card } from "./Card";
 import { CardStack } from "./CardStack";
 import { PlayedCards } from "./PlayedCards";
 import { Player } from "./Player";
+import { Scores } from "./Scores";
 import styles from "./Table.module.css";
 
 export interface TableProps {
@@ -36,6 +37,8 @@ export function Table(props: TableProps) {
 			</div>
 
 			<PlayedCards></PlayedCards>
+
+			<Scores></Scores>
 		</div>
 	);
 }
