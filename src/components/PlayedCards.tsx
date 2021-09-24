@@ -6,7 +6,6 @@ export function PlayedCards(props: any) {
 
 	return (
 		<div>
-			TEST
 			{plays.map((play, i) =>
 				<Card
 					key={play.card.key}

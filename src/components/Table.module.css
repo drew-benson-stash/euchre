@@ -18,12 +18,11 @@
 
 .player {
 	position: absolute;
-	min-width: 160px;
-	min-height: 128px;
+	height: 268px;
 }
 
 .top {
-	top: 38px;
+	top: 57px;
 }
 
 .bottom {

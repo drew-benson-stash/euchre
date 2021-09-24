@@ -1,3 +1,5 @@
 .hand {
 	display: flex;
+	position: relative;
+	left: -42px;
 }

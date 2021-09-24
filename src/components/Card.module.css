@@ -16,7 +16,7 @@
 
 .cardDisabled {
 	cursor: not-allowed;
-	filter: brightness(0.75) drop-shadow(4px 4px 4px black);
+	filter: brightness(0.65) drop-shadow(4px 4px 4px black);
 }
 
 .cardImage {

@@ -3,11 +3,11 @@ import { Card } from "./Card";
 import styles from './Hand.module.css';
 
 export interface CardStackProps {
-	cards: Cards;
-	onCardClick?: (card: CardModel) => void;
-	disabled?: boolean;
-	disableCard?: Array<boolean>;
-	splay?: boolean;
+	readonly cards: Cards;
+	readonly onCardClick?: (card: CardModel) => void;
+	readonly disabled?: boolean;
+	readonly disableCard?: Array<boolean>;
+	readonly splay?: boolean;
 }
 
 const CardStackPropDefaults: Required<CardStackProps> = {
@@ -32,7 +32,7 @@ export function CardStack(props: CardStackProps) {
 					place={i * interval}
 					onClick={() => p.onCardClick(card)}
 					disabled={p.disabled || p.disableCard[i]}
-					splay={p.splay}
+					splay={p.cards.length > 1 && p.splay}
 				></Card>
 			)}
 		</div>
