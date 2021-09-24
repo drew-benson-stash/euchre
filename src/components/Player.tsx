@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Card, CardSuit } from "../game/card-models";
+import { Card, Cards, CardSuit } from "../game/card-models";
 import { callTrump, deal, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { CardStack } from "./CardStack";
 import styles from "./Player.module.css";
 import { MiniStack } from "./MiniStack";
+import { SuitButtons } from "./SuitButtons";
 
 export interface PlayerProps {
 	readonly playerIndex: number;
@@ -42,28 +43,24 @@ export function Player(props: PlayerProps) {
 		}
 	};
 
+	const onSuitClickHandler = (suit: CardSuit) => dispatch(callTrump(suit));
+
 	const passBidButton = () =>
 		<button onClick={() => dispatch(passBid())}>
-			Pass
+			PASS
 		</button>
 
 	const orderUpButton = () => 
 		<button onClick={() => dispatch(orderUpCard())}>
-			{isDealer ? "Pick up" : "Order up"}
+			{isDealer ? "PICK UP" : "ORDER UP"}
 		</button>
 
 	const callTrumpButtons = () =>
-		<div className={styles.suitButtons}>
-				{Object.keys(CardSuit).map(suit => 
-				<button onClick={() => dispatch(callTrump(suit as CardSuit))}>
-					{suit}
-				</button>
-			)}
-		</div>
+		<SuitButtons onSuitClick={onSuitClickHandler}></SuitButtons>
 
 	const dealButton = () =>
 		<button onClick={() => dispatch(deal())}>
-			Deal
+			DEAL
 		</button>
 
 	return (
