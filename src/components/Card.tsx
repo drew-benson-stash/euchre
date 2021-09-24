@@ -1,20 +1,25 @@
-import { Card as CardModel, cardName, cardToFileName } from '../game/card-models';
+import { Card as CardModel, CardFace, cardName, CardSuit, newCard } from '../game/card-models';
 import styles from "./Card.module.css";
 
+function cardToFileName(card: CardModel): string {
+	return `images/cards/${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
+}
+
 export interface CardProps {
-	card: CardModel,
-	onClick?: () => void,
-	disabled?: boolean,
+	readonly card?: CardModel,
+	readonly onClick?: () => void,
+	readonly disabled?: boolean,
 	// floating-point number between 0 and 1.0 
-	place?: number,
-	splay?: boolean,
+	readonly place?: number,
+	readonly splay?: boolean,
 }
 
 export const defaultCardProps = {
+	card: newCard(CardSuit.SPADES, CardFace.JOKER),
 	onClick: () => {},
 	disabled: false,
 	place: 0.5, // middle,
-	splay: true,
+	splay: false,
 }
 
 export function Card(props: CardProps) {
@@ -37,7 +42,7 @@ export function Card(props: CardProps) {
 				alt={cardName(p.card)}
 				style={cardStyle}
 				className={styles.cardImage}
-				src={`cards/${cardFileName}`}
+				src={`${cardFileName}`}
 				onClick={p.onClick}
 			></img>
 		</div>

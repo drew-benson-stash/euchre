@@ -69,7 +69,7 @@ export function Player(props: PlayerProps) {
 			></CardStack>
 
 			<div className={styles.playerLabel}>
-				{isDealer ? <img className={styles.dealerIcon} src="dealer_hand.png"></img> : null}
+				{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}
 				<span className={styles.playerName}>
 					{player.name}
 				</span>
