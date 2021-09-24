@@ -21,11 +21,11 @@ export function addPlayersReducer(state: WritableDraft<GameState>, action: Paylo
 }
 
 export function dealReducer(state: WritableDraft<GameState>): void {
-	state.dealer = leftOfPlayer(state.dealer);
 	const deck = shuffle(newDeck);
 	const table = dealCards(deck, state.dealer);
 	state.table = table as WritableDraft<TableState>;
-	state.currentPlayer = leftOfPlayer(state.dealer);
+	state.startPlayer = leftOfPlayer(state.dealer)
+	state.currentPlayer = state.startPlayer;
 	state.phase = GamePhase.BID1;
 }
 
@@ -95,18 +95,25 @@ export function playCardReducer(state: WritableDraft<GameState>, action: Payload
 		state.table.tricks[winner].push(state.table.plays);
 		state.table.plays = [];
 
+		state.startPlayer = winner;
+		state.currentPlayer = state.startPlayer;
+
 		if (handOver(state.table.tricks)) {
 			// End of hand - score hand
 			const scores = scoreHand(state.table.tricks, state.maker!);
 			state.scores = addScores(state.scores, scores);
 
+			state.phase = GamePhase.DEAL;
+
 			if (gameOver(state.scores)) {
 				state.phase = GamePhase.END;
+			} else {
+				state.dealer = leftOfPlayer(state.dealer);
 			}
 		}
+	} else {
+		state.currentPlayer = leftOfPlayer(state.currentPlayer);
 	}
-
-	state.currentPlayer = leftOfPlayer(state.currentPlayer);
 }
 
 export const gameSlice = createSlice({
