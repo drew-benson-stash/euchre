@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Card, Cards, CardSuit } from "../game/card-models";
+import { Card, CardSuit } from "../game/card-models";
 import { callTrump, deal, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { CardStack } from "./CardStack";

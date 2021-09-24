@@ -2,8 +2,6 @@ import { useAppSelector } from "../app/hooks";
 import { suitToFilename } from "../game/card-models";
 import { GamePhase } from "../game/game-state";
 import { Card } from "./Card";
-import { CardStack } from "./CardStack";
-import { MiniCard } from "./MiniCard";
 import { MiniStack } from "./MiniStack";
 import { PlayedCards } from "./PlayedCards";
 import { Player } from "./Player";
@@ -20,7 +18,7 @@ export function Table() {
 				<MiniStack cards={game.table.kitty}></MiniStack>
 
 				{game.trump && game.phase === GamePhase.PLAY_HAND ?
-						<img className={styles.trumpSuit} src={suitToFilename[game.trump]}></img> : null
+						<img alt={`Trump suit is ${game.trump}`} className={styles.trumpSuit} src={suitToFilename[game.trump]}></img> : null
 				}
 			</div>
 

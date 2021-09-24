@@ -53,7 +53,7 @@ export function callTrumpReducer(state: WritableDraft<GameState>, action: Payloa
 
 	state.table.kitty.push(state.table.upCard!);
 	state.table.upCard = undefined;
-                                                                                                                                                                
+
 	state.currentPlayer = leftOfPlayer(state.dealer);
 	state.startPlayer = state.currentPlayer;
 
