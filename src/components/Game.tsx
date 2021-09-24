@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { addPlayers, selectPlayers } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
+import { getNames } from "../names/names-api";
 import { Table } from "./Table";
 
 export function Game() {
@@ -10,7 +11,10 @@ export function Game() {
 
 	const dispatch = useAppDispatch();
 
-	const playerButtonHandler = () => dispatch(addPlayers(["Anne", "Bob", "Charlie", "Diane"]));
+	const playerButtonHandler = async () => {
+		const names = await getNames(4);
+		dispatch(addPlayers(names));
+	}
 
 	if (phase === GamePhase.ADD_PLAYERS) {
 		return (
