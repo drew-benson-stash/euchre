@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { addPlayers, selectPlayers } from "../game/game-slice";
+import { addPlayers } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { getNames } from "../names/names-api";
 import { Table } from "./Table";
+import styles from "./Game.module.css";
 
 export function Game() {
 
-	const players = useAppSelector(selectPlayers);
 	const phase = useAppSelector(state => state.game.phase);
 
 	const dispatch = useAppDispatch();
@@ -18,9 +18,8 @@ export function Game() {
 
 	if (phase === GamePhase.ADD_PLAYERS) {
 		return (
-			<div>
-				<button onClick={playerButtonHandler}>Add Players</button>
-				{players.map(p => p.name).join(", ")}
+			<div className={styles.splashScreen} style={{backgroundImage: `url('images/splashscreen.png')`}}>
+				<button onClick={playerButtonHandler}>START</button>
 			</div>
 		);
 	} else {
