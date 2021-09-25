@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Card, CardSuit } from "../game/card-models";
 import { callTrump, deal, dealerDiscardAndPickup, orderUpCard, passBid, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
-import { CardStack } from "./CardStack";
+import { Hand } from "./Hand";
 import styles from "./Player.module.css";
 import { MiniStack } from "./MiniStack";
 import { SuitButtons } from "./SuitButtons";
@@ -63,14 +63,16 @@ export function Player(props: PlayerProps) {
 			DEAL
 		</button>
 
+	const disabled = !(canPlayCard || dealerDiscard);
+
 	return (
 		<div className={styles.playerContainer + (props.tricksOnLeft ? ` ${styles.tricksOnLeft}` : '')}>
 			<div className={styles.player}>
-				<CardStack
+				<Hand
 					cards={hand}
-					disabled={!(canPlayCard || dealerDiscard)}
+					disabled={disabled}
 					onCardClick={cardClickHandler}
-				></CardStack>
+				></Hand>
 
 				<div className={styles.playerLabel}>
 					{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}

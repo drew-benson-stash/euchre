@@ -1,43 +1,42 @@
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Card as CardModel } from "../game/card-models";
-import { dealerDiscardAndPickup, playCard } from "../game/game-slice";
-import { GamePhase } from "../game/game-state";
+import { Card as CardModel, Cards } from "../game/card-models";
 import { Card } from "./Card";
 import styles from './Hand.module.css';
 
 export interface HandProps {
-	readonly playerIndex: number;
+	readonly cards: Cards;
+	readonly onCardClick?: (card: CardModel) => void;
+	readonly disabled?: boolean;
+	readonly disableCard?: Array<boolean>;
+	readonly splay?: boolean;
+}
+
+const handPropDefaults: Required<HandProps> = {
+	cards: [],
+	onCardClick: () => {},
+	disabled: false,
+	disableCard: [],
+	splay: true,
 }
 
 export function Hand(props: HandProps) {
-	const game = useAppSelector(state => state.game);
-	const player = game.players[props.playerIndex];
-	const cards = game.table?.hands[player.index];
+	const p: Required<HandProps> = {...handPropDefaults, ...props};
 
-	const currentPlayer = player.index === game.currentPlayer && game.phase === GamePhase.PLAY_HAND;
-	const dealerDiscard = player.index === game.dealer && game.phase === GamePhase.DEALER_DISCARD
-
-	const dispatch = useAppDispatch();
-
-	const cardClickHandler = (card: CardModel) => {
-		if (currentPlayer) {
-			dispatch(playCard(card));
-		}
-		if (dealerDiscard) {
-			dispatch(dealerDiscardAndPickup(card));
-		}
-	};
+	const interval = 1.0 / (p.cards.length - 1);
 
 	return (
 		<div className={styles.hand}>
-			{cards?.map((card) =>
-				<Card
+			{p.cards?.map((card, i) => {
+				const disabled = p.disabled || p.disableCard[i];
+				return (<Card
 					key={card.suit + card.value}
 					card={card}
-					onClick={() => cardClickHandler(card)}
-					disabled={!(currentPlayer || dealerDiscard)}
-				></Card>
-			)}
+					place={i * interval}
+					onClick={() => p.onCardClick(card)}
+					disabled={disabled}
+					grayedOut={disabled}
+					splay={p.cards.length > 1 && p.splay}
+				></Card>);
+			})}
 		</div>
 	);
 }

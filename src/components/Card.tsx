@@ -9,6 +9,7 @@ export interface CardProps {
 	readonly card?: CardModel,
 	readonly onClick?: () => void,
 	readonly disabled?: boolean,
+	readonly grayedOut?: boolean,
 	// floating-point number between 0 and 1.0 
 	readonly place?: number,
 	readonly splay?: boolean,
@@ -18,6 +19,7 @@ export const defaultCardProps = {
 	card: newCard(CardSuit.SPADES, CardFace.JOKER),
 	onClick: () => {},
 	disabled: false,
+	grayedOut: false,
 	place: 0.5, // middle,
 	splay: false,
 }
@@ -36,14 +38,22 @@ export function Card(props: CardProps) {
 		transform: p.splay ? `rotate(${16 * leftAndRight}deg) translate(0, ${-16 * upAndDown}px)` : 'none',
 	}
 
+	const style = [
+		styles.card,
+		p.disabled ? styles.disabled : null,
+		p.grayedOut ? styles.grayedOut : null,
+	];
+
+	const classes = style.filter(s => s).join(' ');
+
 	return (
-		<div className={styles.card + (p.disabled ? ` ${styles.cardDisabled}` : '')}>
+		<div className={classes}>
 			<img
 				alt={cardName(p.card)}
 				style={cardStyle}
-				className={styles.cardImage}
+				className={styles.image}
 				src={`${cardFileName}`}
-				onClick={p.onClick}
+				onClick={p.disabled ? () => {} : p.onClick}
 			></img>
 		</div>
 	);
