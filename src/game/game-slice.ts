@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { WritableDraft } from "immer/dist/types/types-external";
 import { RootState } from "../app/store";
-import { Card, Cards, CardSuit, removeCard, shuffle } from "./card-models";
-import { deal as dealCards, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, gameOver, handOver } from "./game-rules";
-import { GamePhase, GameState, initialState, TableState, Team } from "./game-state";
+import { shuffle } from "../array-utils";
+import { Card, Cards, CardSuit, removeCard } from "./card-models";
+import { deal as dealCards, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, winner, handOver } from "./game-rules";
+import { GamePhase, GameState, initialState, initialTableState, TableState, Team } from "./game-state";
 
 export function addPlayersReducer(state: WritableDraft<GameState>, action: PayloadAction<Array<string>>): void {
 	if (action.payload.length !== 4) {
@@ -54,10 +55,7 @@ export function callTrumpReducer(state: WritableDraft<GameState>, action: Payloa
 	state.table.kitty.push(state.table.upCard!);
 	state.table.upCard = undefined;
 
-	state.currentPlayer = leftOfPlayer(state.dealer);
-	state.startPlayer = state.currentPlayer;
-
-	state.phase = GamePhase.PLAY_HAND;
+	startPlayReducer(state);
 }
 
 export function dealerDiscardAndPickupReducer(state: WritableDraft<GameState>, action: PayloadAction<Card>): void {
@@ -71,12 +69,16 @@ export function dealerDiscardAndPickupReducer(state: WritableDraft<GameState>, a
 
 	// Remove discard and add to the kitty
 	state.table.hands[state.dealer] = removeCard(dealerHand, discard) as WritableDraft<Cards>;
-	state.table.kitty = [...state.table?.kitty, discard];
+	state.table.kitty.push(discard);
 
-	state.phase = GamePhase.PLAY_HAND;
+	startPlayReducer(state);
+}
 
+function startPlayReducer(state: WritableDraft<GameState>): void {
 	state.currentPlayer = leftOfPlayer(state.dealer);
 	state.startPlayer = state.currentPlayer;
+
+	state.phase = GamePhase.PLAY_HAND;
 }
 
 export function playCardReducer(state: WritableDraft<GameState>, action: PayloadAction<Card>): void {
@@ -92,30 +94,61 @@ export function playCardReducer(state: WritableDraft<GameState>, action: Payload
 	state.table.hands[state.currentPlayer] = removeCard(state.table.hands[state.currentPlayer], card) as WritableDraft<Cards>;
 
 	if (state.currentPlayer === rightOfPlayer(state.startPlayer!)) {
-		// End of trick - score plays
-		const winner = winningPlayer(state.table.plays, state.trump!);
-
-		state.table.tricks[winner].push(state.table.plays);
-		state.table.plays = [];
-
-		state.startPlayer = winner;
-		state.currentPlayer = state.startPlayer;
-
-		if (handOver(state.table.tricks)) {
-			// End of hand - score hand
-			const scores = scoreHand(state.table.tricks, state.maker!);
-			state.scores = addScores(state.scores, scores);
-
-			state.phase = GamePhase.DEAL;
-
-			if (gameOver(state.scores)) {
-				state.phase = GamePhase.END;
-			} else {
-				state.dealer = leftOfPlayer(state.dealer);
-			}
-		}
+		scoreTrickReducer(state);
 	} else {
 		state.currentPlayer = leftOfPlayer(state.currentPlayer);
+	}
+}
+
+function scoreTrickReducer(state: WritableDraft<GameState>): void {
+	const winner = winningPlayer(state.table.plays, state.trump!);
+
+	state.table.tricks[winner].push(state.table.plays);
+	state.table.plays = [];
+
+	state.startPlayer = winner;
+	state.currentPlayer = state.startPlayer;
+
+	if (handOver(state.table.tricks)) {
+		scoreHandReducer(state);
+	}
+}
+
+function scoreHandReducer(state: WritableDraft<GameState>): void {
+	// End of hand - score hand
+	const scores = scoreHand(state.table.tricks, state.maker!);
+	state.scores = addScores(state.scores, scores);
+
+	state.phase = GamePhase.DEAL;
+
+	if (winner(state.scores)) {
+		endGameReducer(state);
+	} else {
+		state.dealer = leftOfPlayer(state.dealer);
+	}
+}
+
+function endGameReducer(state: WritableDraft<GameState>): void {
+	// Clear the board
+	state.table = initialTableState;
+	state.trump = undefined;
+
+	state.phase = GamePhase.END;
+}
+
+export function autoPlayReducer(state: WritableDraft<GameState>): void {
+	if (state.phase === GamePhase.DEAL) {
+		dealReducer(state);
+	} else if (state.phase === GamePhase.BID1) {
+		orderUpCardReducer(state);
+	} else if (state.phase === GamePhase.BID2) {
+		callTrumpReducer(state, {payload: CardSuit.SPADES, type: ''});
+	} else if (state.phase === GamePhase.DEALER_DISCARD) {
+		const card = state.table.hands[state.dealer][0];
+		dealerDiscardAndPickupReducer(state, {payload: card, type: ''});
+	}else if (state.phase === GamePhase.PLAY_HAND) {
+		const card = state.table.hands[state.currentPlayer][0];
+		playCardReducer(state, {payload: card, type: ''});
 	}
 }
 
@@ -130,6 +163,7 @@ export const gameSlice = createSlice({
 		callTrump: callTrumpReducer,
 		dealerDiscardAndPickup: dealerDiscardAndPickupReducer,
 		playCard: playCardReducer,
+		autoPlay: autoPlayReducer,
 	}
 });
 
@@ -141,6 +175,7 @@ export const {
 	callTrump,
 	dealerDiscardAndPickup,
 	playCard,
+	autoPlay,
 } = gameSlice.actions;
 
 export const selectPhase = (state: RootState) => state.game.phase;

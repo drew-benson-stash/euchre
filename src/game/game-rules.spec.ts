@@ -1,4 +1,5 @@
-import { newCard, CardFace, Cards, CardSuit, shuffle } from "./card-models";
+import { shuffle } from "../array-utils";
+import { newCard, CardFace, Cards, CardSuit } from "./card-models";
 import { addScores, cardScore, deal, deck, gameOver, handOver, isLeftBower, isRightBower, isTrumpCard, leftOfPlayer, rightOfPlayer, scoreHand, winningPlayer } from "./game-rules";
 import { PlayerAction, Team, Trick } from "./game-state";
 

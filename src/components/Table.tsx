@@ -1,7 +1,9 @@
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { suitToFilename } from "../game/card-models";
+import { autoPlay, playCard } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { Card } from "./Card";
+import { CardParty } from "./CardParty";
 import { MiniStack } from "./MiniStack";
 import { PlayedCards } from "./PlayedCards";
 import { Player } from "./Player";
@@ -10,6 +12,7 @@ import styles from "./Table.module.css";
 
 export function Table() {
 	const game = useAppSelector(state => state.game);
+	const dispatch = useAppDispatch();
 
 	return (
 		<div className={styles.table}>
@@ -43,6 +46,15 @@ export function Table() {
 			<div className={`${styles.player} ${styles.bottom} ${styles.left}`}>
 				<Player playerIndex={3}></Player>
 			</div>
+
+			<button
+				className={styles.fastForwardButton}
+				onClick={() => dispatch(autoPlay())}
+			>
+				{">>"}
+			</button>
+
+			{game.phase === GamePhase.END ? <CardParty></CardParty> : null}
 		</div>
 	);
 }

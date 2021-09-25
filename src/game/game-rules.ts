@@ -1,10 +1,10 @@
 import { newCard, Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
-import { initialTableState, PlayerAction, Scores, TableState, Team, Trick } from "./game-state";
+import { initialTableState, Player, PlayerAction, Scores, TableState, Team, Trick } from "./game-state";
 
 const TRUMP_BONUS = 1000;
 const LEAD_BONUS = 100;
 
-const WINNING_SCORE = 10;
+const WINNING_SCORE = 2;
 const TRICKS_PER_HAND = 5;
 
 /**
@@ -259,8 +259,10 @@ export function addScores(a: Scores, b: Scores): Scores {
  * @param scores the current scores for each team
  * @returns true if one team has achieved victory
  */
-export function gameOver(scores: Scores): boolean {
-	return scores[Team.A] >= WINNING_SCORE || scores[Team.B] >= WINNING_SCORE;
+export function winner(scores: Scores): Team | null {
+	return scores[Team.A] >= WINNING_SCORE ? Team.A :
+		scores[Team.B] >= WINNING_SCORE ? Team.B :
+		null;
 }
 
 /**
@@ -273,3 +275,12 @@ export function handOver(tricks: ReadonlyArray<ReadonlyArray<Trick>>): boolean {
 	return tricksTaken >= TRICKS_PER_HAND;
 }
 
+export function getWinners(scores: Scores, players: ReadonlyArray<Player>): ReadonlyArray<Player> | null {
+	const winningTeam = winner(scores);
+	if (winningTeam === Team.A) {
+		return [players[0], players[2]];
+	} else if (winningTeam === Team.B) {
+		return [players[1], players[3]];
+	}
+	return null;
+}

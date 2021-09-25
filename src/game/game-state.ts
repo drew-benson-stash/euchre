@@ -36,6 +36,7 @@ export enum GamePhase {
 }
 
 export const initialTableState = {
+	upCard: undefined,
 	kitty: [],
 	hands: [],
 	plays: [],

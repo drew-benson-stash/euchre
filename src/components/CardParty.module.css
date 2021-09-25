@@ -1,0 +1,60 @@
+.cardPartyOverlay {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: hidden;
+	z-index: 10;
+}
+
+.cardImage {
+	position: fixed;
+	animation-name: spinAndFall;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	z-index: 1;
+}
+
+@keyframes spinAndFall {
+	from {
+		transform: translate(0, 0) rotate3d(1, 1, 1, 0deg);
+	}
+	to {
+		transform: translate(0, 3000px) rotate3d(1, 1, 1, 360deg);
+	}
+}
+
+.congratsMessage {
+	z-index: 100;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 64px;
+	font-weight: bold;
+	text-align: center;
+	width: auto;
+	/* background-color: rgba(0, 0, 0, 0.671); */
+	border-radius: 40px;
+	padding: 20px;
+	animation-name: rainbowBackground;
+	animation-duration: 5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes rainbowBackground {
+	from {
+		background-color: rgba(255, 0, 0, 0.66);
+	}
+	33% {
+		background-color: rgba(0, 255, 0, 0.66);
+	}
+	66% {
+		background-color: rgba(0, 0, 255, 0.66);
+	}
+	to {
+		background-color: rgba(255, 0, 0, 0.66);
+	}
+}

@@ -62,3 +62,9 @@
 	position: absolute;
 	bottom: 0px;
 }
+
+.fastForwardButton {
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+}
