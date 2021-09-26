@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { suitToFilename } from "../game/card-models";
-import { autoPlay, playCard } from "../game/game-slice";
+import { autoPlay } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
 import { Card } from "./Card";
 import { CardParty } from "./CardParty";
@@ -14,14 +14,23 @@ export function Table() {
 	const game = useAppSelector(state => state.game);
 	const dispatch = useAppDispatch();
 
+	const maker = game.maker && game.players[game.maker].name;
+
+	const showTrump = game.trump && (game.phase === GamePhase.PLAY_HAND);
+
+
 	return (
 		<div className={styles.table}>
 
 			<div className={styles.topOfScreen}>
 				<MiniStack cards={game.table.kitty}></MiniStack>
 
-				{game.trump && game.phase === GamePhase.PLAY_HAND ?
-						<img alt={`Trump suit is ${game.trump}`} className={styles.trumpSuit} src={suitToFilename[game.trump]}></img> : null
+				{game.trump && showTrump ?
+					<span className={styles.trump}>
+						{maker} ordered up
+						<img alt={game.trump} className={styles.trumpSuit} src={suitToFilename[game.trump!]}></img>
+					</span>
+					: null
 				}
 			</div>
 

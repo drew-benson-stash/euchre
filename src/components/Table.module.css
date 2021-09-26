@@ -37,10 +37,23 @@
 	right: 42px;
 }
 
+.trump {
+	font-weight: bold;
+	margin-top: 10px;
+	vertical-align: middle;
+	padding: 10px;
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.171);
+	filter: drop-shadow(4px 4px 4px black);
+	display: flex;
+	align-items:center;
+}
+
 .trumpSuit {
-	width: 36px;
-	filter: drop-shadow(0 0 6px white);
-	margin-top: 16px;
+	width: 24px;
+	/* filter: drop-shadow(0 0 6px white); */
+	/* margin-top: 16px; */
+	margin-left: 8px;
 }
 
 .topOfScreen {
