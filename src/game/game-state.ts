@@ -5,9 +5,13 @@ export enum Team {
 	B = "B",
 }
 
-export interface Player {
+export interface Person {
+	readonly firstName: string;
+	readonly lastName: string;
+}
+
+export interface Player extends Person {
 	readonly index: number;
-	readonly name: string;
 	readonly team: Team;
 }
 

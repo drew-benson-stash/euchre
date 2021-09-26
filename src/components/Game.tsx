@@ -1,9 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { addPlayers } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
-import { getNames } from "../names/names-api";
 import { Table } from "./Table";
 import styles from "./Game.module.css";
+import { getPeople } from "../names/names-api";
 
 export function Game() {
 
@@ -12,7 +12,7 @@ export function Game() {
 	const dispatch = useAppDispatch();
 
 	const playerButtonHandler = async () => {
-		const names = await getNames(4);
+		const names = await getPeople(4);
 		dispatch(addPlayers(names));
 	}
 

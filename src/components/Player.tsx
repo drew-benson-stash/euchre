@@ -76,7 +76,7 @@ export function Player(props: PlayerProps) {
 
 				<div className={styles.playerLabel}>
 					{isDealer ? <img className={styles.dealerIcon} alt="Dealer Icon" src="images/dealer_hand.png"></img> : null}
-					<span className={styles.playerName}>{player.name}</span>
+					<span className={styles.playerName}>{player.firstName} {player.lastName}</span>
 				</div>
 
 				<div className={styles.playerActions}>

@@ -62,9 +62,15 @@ export function removeCard(cards: Cards, toRemove: Card): Cards {
 	return cards.filter(card => !sameCard(card, toRemove));
 }
 
-export const suitToFilename: Record<CardSuit, string> = {
+export const suitToImage: Record<CardSuit, string> = {
 	[CardSuit.SPADES]: 'images/suits/spades.svg',
 	[CardSuit.DIAMONDS]: 'images/suits/diamonds.svg',
 	[CardSuit.CLUBS]: 'images/suits/clubs.svg',
 	[CardSuit.HEARTS]: 'images/suits/hearts.svg',
 }
+
+export function cardToImage(card: Card): string {
+	return `images/cards/${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
+}
+
+export const BACK_OF_CARD_IMAGE = "images/cards/card_back.svg";

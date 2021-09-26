@@ -1,0 +1,32 @@
+.container {
+	position: fixed;
+	top: 50%;
+	height: 150px;
+	display: flex;
+	flex-direction: column;
+	transform: translate(0, -50%);
+}
+
+.scoresA {
+	left: 30px;
+}
+
+.scoresB {
+	right: 29px;
+	align-items: end;
+}
+
+.scoreCard {
+	position: absolute;
+	width: 70px;
+	transition: transform 1s;
+}
+
+.names {
+	position: relative;
+}
+
+.cards {
+	height: 150px;
+	width: 75px;
+}

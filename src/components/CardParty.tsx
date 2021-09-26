@@ -1,8 +1,7 @@
-import { cardToFileName } from "./Card";
 import styles from "./CardParty.module.css";
 import { deck, getWinners } from "../game/game-rules";
-import { Player } from "../game/game-state";
 import { useAppSelector } from "../app/hooks";
+import { cardToImage } from "../game/card-models";
 
 const NUM_CARDS = 150;
 
@@ -15,7 +14,7 @@ function rand(max: number, min = 0): number {
 
 function newFlyingCard(i: number): JSX.Element {
 	const card = deck[rand(deck.length)];
-	const src = cardToFileName(card);
+	const src = cardToImage(card);
 	const duration = rand(MIN_DURATION, MAX_DURATION);
 
 	const style = {
@@ -48,7 +47,7 @@ export function CardParty() {
 			{cards}
 			<div className={styles.congratsMessage}>
 				<div>Congratulations</div>
-				<div>{winners.map(p => p.name).join(" & ")}!</div>
+				<div>{winners.map(p => p.firstName).join(" & ")}!</div>
 			</div>
 		</div>
 	);

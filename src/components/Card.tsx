@@ -1,9 +1,5 @@
-import { Card as CardModel, CardFace, cardName, CardSuit, newCard } from '../game/card-models';
+import { Card as CardModel, CardFace, cardName, CardSuit, cardToImage, newCard } from '../game/card-models';
 import styles from "./Card.module.css";
-
-export function cardToFileName(card: CardModel): string {
-	return `images/cards/${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
-}
 
 export interface CardProps {
 	readonly card?: CardModel,
@@ -29,7 +25,7 @@ export function Card(props: CardProps) {
 
 	const p: Required<CardProps> = {...defaultCardProps, ...props};
 
-	const cardFileName = cardToFileName(p.card);
+	const cardFileName = cardToImage(p.card);
 
 	const leftAndRight = (2 * p.place) - 1;
 	const upAndDown = Math.abs(2 * p.place - 1) * -1 + 1;

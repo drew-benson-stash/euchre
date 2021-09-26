@@ -4,18 +4,18 @@ import { RootState } from "../app/store";
 import { shuffle } from "../array-utils";
 import { Card, Cards, CardSuit, removeCard } from "./card-models";
 import { deal as dealCards, deck as newDeck, leftOfPlayer, rightOfPlayer, randomPlayer, winningPlayer, scoreHand, addScores, winner, handOver } from "./game-rules";
-import { GamePhase, GameState, initialState, initialTableState, TableState, Team } from "./game-state";
+import { GamePhase, GameState, initialState, initialTableState, Person, TableState, Team } from "./game-state";
 
-export function addPlayersReducer(state: WritableDraft<GameState>, action: PayloadAction<Array<string>>): void {
+export function addPlayersReducer(state: WritableDraft<GameState>, action: PayloadAction<Array<Person>>): void {
 	if (action.payload.length !== 4) {
 		throw new Error("Must supply exactly 4 players");
 	}
 	const players = action.payload;
 	state.players = [
-		{index: 0, name: players[0], team: Team.A},
-		{index: 1, name: players[1], team: Team.B},
-		{index: 2, name: players[2], team: Team.A},
-		{index: 3, name: players[3], team: Team.B},
+		{index: 0, ...players[0], team: Team.A},
+		{index: 1, ...players[1], team: Team.B},
+		{index: 2, ...players[2], team: Team.A},
+		{index: 3, ...players[3], team: Team.B},
 	];
 	state.dealer = randomPlayer();
 	state.phase = GamePhase.DEAL;
@@ -137,6 +137,9 @@ function endGameReducer(state: WritableDraft<GameState>): void {
 }
 
 export function autoPlayReducer(state: WritableDraft<GameState>): void {
+	state.scores[Team.A]++;
+	state.scores[Team.B]++;
+	return;
 	if (state.phase === GamePhase.DEAL) {
 		dealReducer(state);
 	} else if (state.phase === GamePhase.BID1) {
