@@ -1,5 +1,5 @@
 import { useAppSelector } from "../app/hooks"
-import { BACK_OF_CARD_IMAGE, Card, CardSuit, cardToImage, newCard } from "../game/card-models";
+import { BACK_OF_CARD_IMAGE, CardSuit, cardToImage, newCard } from "../game/card-models";
 import { Team } from "../game/game-state";
 import styles from "./Scores.module.css";
 

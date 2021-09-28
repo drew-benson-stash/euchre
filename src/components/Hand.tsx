@@ -1,5 +1,5 @@
 import { useAppSelector } from "../app/hooks";
-import { Card as CardModel, Cards, CardSuit } from "../game/card-models";
+import { Card as CardModel, Cards } from "../game/card-models";
 import { sortCards } from "../game/game-rules";
 import { Card } from "./Card";
 import styles from './Hand.module.css';

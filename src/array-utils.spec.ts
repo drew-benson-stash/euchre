@@ -36,19 +36,19 @@ describe("array utils", () => {
 			// re-implement Javascript's random function in a seedable way.
 
 			const array = ["A", "B", "C"];
-			const found: Record<string, boolean> = {A: false, B: false, C: false};
+			const removed: Record<string, boolean> = {A: false, B: false, C: false};
 
 			for (let i = 0; i < 1000; i++) {
 				const [item] = oneFromArray(array);
-				found[item] = true;
+				removed[item] = true;
 
-				if (Object.values(found).every(f => f)) {
+				if (Object.values(removed).every(f => f)) {
 					expect(true).toBeTruthy();
 					return;
 				}
 			}
 
-			throw new Error("Not every item found in 1000 tries: " + JSON.stringify(found));
+			throw new Error("Not every item removed in 1000 tries: " + JSON.stringify(removed));
 		});
 	});
 	describe("nFromArray", () => {

@@ -1,8 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { suitToImage } from "../game/card-models";
+import { cardToImage, suitToImage } from "../game/card-models";
 import { autoPlay } from "../game/game-slice";
 import { GamePhase } from "../game/game-state";
-import { Card } from "./Card";
 import { CardParty } from "./CardParty";
 import { MiniStack } from "./MiniStack";
 import { PlayedCards } from "./PlayedCards";
@@ -17,7 +16,6 @@ export function Table() {
 	const maker = (game.maker !== undefined) && game.players[game.maker].firstName;
 
 	const showTrump = game.trump && (game.phase === GamePhase.PLAY_HAND);
-
 
 	return (
 		<div className={styles.table}>
@@ -39,7 +37,7 @@ export function Table() {
 			</div>
 
 			<div className={styles.centerField}>
-				<div><Card card={game.table?.upCard} disabled={true}></Card></div>
+				{game.table.upCard ? <img className={styles.upCard} alt="Up Card" src={cardToImage(game.table.upCard)}></img> : null}
 				<PlayedCards></PlayedCards>
 			</div>
 

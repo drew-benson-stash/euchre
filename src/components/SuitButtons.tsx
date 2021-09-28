@@ -11,6 +11,7 @@ export function SuitButtons(props: SuitButtonsProps) {
 		<Fragment>
 			{Object.keys(CardSuit).map(suit => 
 				<button
+					key={suit}
 					className={styles.suitButton}
 					onClick={() => props.onSuitClick(suit as CardSuit)}
 					style={{backgroundImage: `url('${suitToImage[suit as CardSuit]}')`}}

@@ -72,6 +72,11 @@
 	transform: translate(-50%, -50%);
 }
 
+.upCard {
+	width: 150px;
+	filter: drop-shadow(0 0 8px black);
+}
+
 .bottomOfScreen {
 	position: absolute;
 	bottom: 0px;
