@@ -1,4 +1,6 @@
-import { Card as CardModel, Cards } from "../game/card-models";
+import { useAppSelector } from "../app/hooks";
+import { Card as CardModel, Cards, CardSuit } from "../game/card-models";
+import { sortCards } from "../game/game-rules";
 import { Card } from "./Card";
 import styles from './Hand.module.css';
 
@@ -23,9 +25,12 @@ export function Hand(props: HandProps) {
 
 	const interval = 1.0 / (p.cards.length - 1);
 
+	const trump = useAppSelector(state => state.game.trump);
+	const sorted = sortCards(p.cards, trump);
+
 	return (
 		<div className={styles.hand}>
-			{p.cards?.map((card, i) => {
+			{sorted.map((card, i) => {
 				const disabled = p.disabled || p.disableCard[i];
 				return (<Card
 					key={card.suit + card.value}

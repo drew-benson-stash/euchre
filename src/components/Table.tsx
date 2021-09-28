@@ -14,7 +14,7 @@ export function Table() {
 	const game = useAppSelector(state => state.game);
 	const dispatch = useAppDispatch();
 
-	const maker = game.maker && game.players[game.maker].firstName;
+	const maker = (game.maker !== undefined) && game.players[game.maker].firstName;
 
 	const showTrump = game.trump && (game.phase === GamePhase.PLAY_HAND);
 

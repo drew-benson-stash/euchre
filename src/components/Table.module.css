@@ -51,9 +51,10 @@
 
 .trumpSuit {
 	width: 24px;
-	/* filter: drop-shadow(0 0 6px white); */
-	/* margin-top: 16px; */
 	margin-left: 8px;
+	border: 2px rgba(255, 255, 255) solid;
+	border-radius: 7px;
+	background-color: rgba(255, 255, 255);
 }
 
 .topOfScreen {

@@ -137,9 +137,6 @@ function endGameReducer(state: WritableDraft<GameState>): void {
 }
 
 export function autoPlayReducer(state: WritableDraft<GameState>): void {
-	state.scores[Team.A]++;
-	state.scores[Team.B]++;
-	return;
 	if (state.phase === GamePhase.DEAL) {
 		dealReducer(state);
 	} else if (state.phase === GamePhase.BID1) {

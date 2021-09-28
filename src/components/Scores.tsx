@@ -12,7 +12,9 @@ const fourOfDiamonds = newCard(CardSuit.DIAMONDS, 4);
 const sixOfDiamonds = newCard(CardSuit.DIAMONDS, 6);
 
 enum Value {
-	BACK_OF_CARD, SIX, FOUR,
+	BACK_OF_CARD = "BACK_OF_CARD",
+	SIX = "SIX",
+	FOUR = "FOUR",
 }
 
 enum Location {
@@ -122,7 +124,7 @@ function scoreCard(team: Team, value: Value, location: Location): JSX.Element {
 		transform: `translate(${position.x}px, ${position.y}px) rotate(${position.r}deg)`,
 	}
 	return (
-		<img className={styles.scoreCard} src={image} style={style}></img>
+		<img key={`${team}${value}`} className={styles.scoreCard} src={image} style={style} alt={value}></img>
 	)
 }
 

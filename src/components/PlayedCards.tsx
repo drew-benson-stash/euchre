@@ -8,7 +8,7 @@ export function PlayedCards(props: any) {
 		<div>
 			{plays.map((play, i) =>
 				<Card
-					key={play.card.key}
+					key={play.card.code}
 					card={play.card}
 					disabled={true}
 				></Card>

@@ -22,19 +22,60 @@ export type CardValue = CardNumber | CardFace;
 export interface Card {
 	readonly suit: CardSuit;
 	readonly value: CardValue;
-	readonly key: string;
+	readonly code: string;
 }
 
 export function newCard(suit: CardSuit, value: CardValue) {
 	return {
 		suit,
 		value,
-		key: suit[0] + shortValue(value),
+		code: suit[0] + valueToCode(value),
 	};
 }
 
-export function shortValue(value: CardValue): string {
-	return typeof value === "number" ? String(value) : value[0].toUpperCase();
+export function codeToCard(code: string) {
+	if (code.length < 2 || code.length > 3) throw new Error(`Invalid card code: ${code}`);
+
+	const suit = codeToSuit[code[0]];
+	if (!suit) throw new Error(`Invalid suit code: ${code[0]}`);
+
+	const valueCode = code.substring(1);
+
+	const value: CardValue = safeParseInt(valueCode) as CardNumber || codeToFace[valueCode];
+
+	return newCard(suit, value);
+}
+
+function safeParseInt(str: string): number | false {
+	if (isNaN(str as unknown as number)) {
+		return false;
+	}
+	return parseInt(str, 10);
+}
+
+const codeToSuit: Record<string, CardSuit> = {
+	"S": CardSuit.SPADES,
+	"D": CardSuit.DIAMONDS,
+	"C": CardSuit.CLUBS,
+	"H": CardSuit.HEARTS,
+};
+
+const codeToFace: Record<string, CardFace> = {
+	"?": CardFace.JOKER,
+	"J": CardFace.JACK,
+	"Q": CardFace.QUEEN,
+	"K": CardFace.KING,
+	"A": CardFace.ACE,
+}
+
+export function suitToCode(suit: CardSuit): string {
+	return suit[0];
+}
+
+export function valueToCode(value: CardValue): string {
+	return typeof value === "number" ? String(value) : 
+		value === CardFace.JOKER ? "?" :
+		value[0].toUpperCase();
 }
 
 export interface FaceCard extends Card {

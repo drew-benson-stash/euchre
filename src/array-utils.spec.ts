@@ -9,7 +9,7 @@ describe("array utils", () => {
 		});
 		it("returns all the items given", () => {
 			const array = ["A", "B", "C", "D", "E"];
-			const result = oneFromArray(array);
+			const result = shuffle(array);
 			expect(result.length).toBe(array.length);
 			array.forEach(el => expect(result.includes(el)));
 		});

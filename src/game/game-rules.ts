@@ -1,11 +1,19 @@
 import { newCard, Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
 import { initialTableState, Player, PlayerAction, Scores, TableState, Team, Trick } from "./game-state";
 
-const TRUMP_BONUS = 1000;
-const LEAD_BONUS = 100;
-
 const WINNING_SCORE = 2;
 const TRICKS_PER_HAND = 5;
+
+const TRUMP_BONUS = 1000000;
+const LEAD_BONUS = 100000;
+
+const suitBonuses: Record<CardSuit, number> = {
+	// Traditional (though arbitrary) suit order
+	[CardSuit.SPADES]: 10000,
+	[CardSuit.DIAMONDS]: 1000,
+	[CardSuit.CLUBS]: 100,
+	[CardSuit.HEARTS]: 0,
+}
 
 /**
  * Determines which player won this trick
@@ -14,18 +22,23 @@ const TRICKS_PER_HAND = 5;
  * @param trump suit that ranks above all others for this hand
  * @returns number of the player who played the winning card this trick
  */
-export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump: CardSuit): number {
+export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump?: CardSuit): number {
 	const cards = trick.map(play => play.card);
 	const leadCard = trick[0].card;
 	// Left bower IS trump suit for the duration of the hand
 	const leadSuit = isLeftBower(leadCard, trump) ? trump : leadCard.suit;
-	const sorted = cards.sort(compareCards.bind(null, trump, leadSuit));
+	const sorted = cards.sort((a, b) => compareCards(a, b, trump, leadSuit));
 
 	// Last card has highest value, thus is the winner!
 	const winningCard = sorted[sorted.length - 1];
 
 	const winningPlay = trick.find(play => sameCard(winningCard, play.card));
 	return winningPlay!.player;
+}
+
+
+export function sortCards(cards: Cards, trump?: CardSuit, lead?: CardSuit): Cards {
+	return cards.slice().sort((a, b) => compareCards(a, b, trump, lead));
 }
 
 /**
@@ -41,36 +54,61 @@ export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump: CardSui
  * @param lead suit of the first card played this trick
  * @returns +1 if A wins, -1 if B wins, 0 if identical or indeterminate (see notes)
  */
-export function compareCards(trump: CardSuit, lead: CardSuit, a: Card, b: Card): number {
-	const rawScore = cardScore(a, trump, lead) - cardScore(b, trump, lead);
-	return Math.sign(rawScore);
+export function compareCards(a: Card, b: Card, trump?: CardSuit, lead?: CardSuit): number {
+	const scoreA = cardScore(a, trump, lead);
+	const scoreB = cardScore(b, trump, lead);
+	return Math.sign(scoreA - scoreB);
 }
 
 /**
- * Returns a numeric score that ranks this card compared to other cards.
+ * Returns a numeric score that ranks this card compared to other cards
+ * considering what suit is trump and what suit was led this round
  * This score is only valid compared to other cards given the same suit and lead.
  * 
  * @param card the card to score
  * @param trump suit that ranks above all others for this hand
- * @param lead suit of the first card played this trick
+ * @param lead suit of the first card played this round
  * @returns a number that ranks this card compared to other cards given the same suit and lead
  */
-export function cardScore(card: Card, trump: CardSuit, lead: CardSuit): number {
+export function cardScore(card: Card, trump?: CardSuit, lead?: CardSuit): number {
+	const isLeft = isLeftBower(card, trump);
+	const leadBonus = isLeadCard(card, trump, lead) ? LEAD_BONUS : 0;
+	const trumpBonus = isTrumpCard(card, trump) ? TRUMP_BONUS : 0;
+
+	const suit = isLeft ? trump : card.suit;
+	const suitBonus = suitBonuses[suit!];
+
+	const score = baseCardScore(card, trump);
+	return score + suitBonus + trumpBonus + leadBonus;
+}
+
+function isLeadCard(card: Card, trump?: CardSuit, lead?: CardSuit): boolean {
+	const isLeft = isLeftBower(card, trump);
+	// Left bower can be trump IIF trump was led
+	return (isLeft && trump === lead) || (!isLeft && card.suit === lead);
+}
+
+/**
+ * Scores each card based only on value, not considering suit
+ * Trump cards are scored roughly the same as non-trump, but trump suit
+ * orders the cards differently and includes the Left bower,
+ * which is why this needs to have trump suit passed in
+ * 
+ * @param card the card to score
+ * @param trump suit that ranks above all others for this hand
+ * @returns a number that ranks this card compared to other cards of the same suit
+ */
+function baseCardScore(card: Card, trump?: CardSuit): number {
 	const isTrump = isTrumpCard(card, trump);
 	const isLeft = isLeftBower(card, trump);
-
 	const score = isFaceCard(card) ? faceScore(card, isTrump) : card.value as number;
-
-	const leadBonus = (card.suit === lead || (isLeft && lead === trump)) ? LEAD_BONUS : 0;
-	const trumpBonus = isTrumpCard(card, trump) ? TRUMP_BONUS : 0;
 
 	// Left bower is scored one less than right bower
 	const leftBowerPenalty = isLeft ? -1 : 0;
-
-	return score + trumpBonus + leadBonus + leftBowerPenalty;
+	return score + leftBowerPenalty;
 }
 
-function faceScore(card: FaceCard, isTrump: boolean): number {
+function faceScore(card: FaceCard, isTrump = false): number {
 	return isTrump ? faceToNumberTrump[card.value] : faceToNumber[card.value];
 }
 
@@ -82,8 +120,8 @@ function faceScore(card: FaceCard, isTrump: boolean): number {
  * @param trump suit that ranks above all others for this hand
  * @returns true if `card` is the left bower
  */
-export function isLeftBower(card: Card, trump: CardSuit): boolean {
-	return card.value === CardFace.JACK && card.suit === sameColor[trump];
+export function isLeftBower(card: Card, trump?: CardSuit): boolean {
+	return !!trump && (card.value === CardFace.JACK && card.suit === sameColor[trump]);
 }
 
 /**
@@ -94,7 +132,7 @@ export function isLeftBower(card: Card, trump: CardSuit): boolean {
  * @param trump suit that ranks above all others for this hand
  * @returns true if `card` is the right bower
  */
-export function isRightBower(card: Card, trump: CardSuit): boolean {
+export function isRightBower(card: Card, trump?: CardSuit): boolean {
 	return card.value === CardFace.JACK && card.suit === trump;
 }
 
@@ -106,8 +144,8 @@ export function isRightBower(card: Card, trump: CardSuit): boolean {
  * @param trump suit that ranks above all others for this hand
  * @returns true if `card` belongs to the trump suit
  */
-export function isTrumpCard(card: Card, trump: CardSuit) {
-	return (card.suit === trump) || isLeftBower(card, trump);
+export function isTrumpCard(card: Card, trump?: CardSuit) {
+	return trump && ((card.suit === trump) || isLeftBower(card, trump));
 }
 
 const faceToNumber: Record<CardFace, number> = {

@@ -8,7 +8,7 @@ export interface MiniStackProps {
 export function MiniStack(props: MiniStackProps) {
 	return (
 		<div>
-			{props.cards.map(card => <MiniCard key={card.key} card={card}></MiniCard>)}
+			{props.cards.map(card => <MiniCard key={card.code} card={card}></MiniCard>)}
 		</div>
 	)
 }
