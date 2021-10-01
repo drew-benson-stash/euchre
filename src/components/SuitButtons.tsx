@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { useAppSelector } from "../app/hooks";
 import { CardSuit, suitToImage } from "../game/card-models";
 import styles from "./SuitButtons.module.css";
 
@@ -7,9 +8,13 @@ export interface SuitButtonsProps {
 }
 
 export function SuitButtons(props: SuitButtonsProps) {
+	const upCardSuit = useAppSelector(state => state.game.table.upCard)?.suit;
+
+	const suits = Object.keys(CardSuit).map(suit => suit as CardSuit).filter(suit => suit !== upCardSuit);
+
 	return (
 		<Fragment>
-			{Object.keys(CardSuit).map(suit => 
+			{suits.map(suit => 
 				<button
 					key={suit}
 					className={styles.suitButton}
