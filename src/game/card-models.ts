@@ -17,19 +17,19 @@ export enum CardFace {
 
 export type CardNumber = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
-export type CardValue = CardNumber | CardFace;
+export type CardRank = CardNumber | CardFace;
 
 export interface Card {
 	readonly suit: CardSuit;
-	readonly value: CardValue;
+	readonly rank: CardRank;
 	readonly code: string;
 }
 
-export function newCard(suit: CardSuit, value: CardValue) {
+export function newCard(suit: CardSuit, rank: CardRank) {
 	return {
 		suit,
-		value,
-		code: suit[0] + valueToCode(value),
+		rank,
+		code: suit[0] + rankToCode(rank),
 	};
 }
 
@@ -39,11 +39,11 @@ export function codeToCard(code: string) {
 	const suit = codeToSuit[code[0]];
 	if (!suit) throw new Error(`Invalid suit code: ${code[0]}`);
 
-	const valueCode = code.substring(1);
+	const rankCode = code.substring(1);
 
-	const value: CardValue = safeParseInt(valueCode) as CardNumber || codeToFace[valueCode];
+	const rank: CardRank = safeParseInt(rankCode) as CardNumber || codeToFace[rankCode];
 
-	return newCard(suit, value);
+	return newCard(suit, rank);
 }
 
 function safeParseInt(str: string): number | false {
@@ -72,22 +72,22 @@ export function suitToCode(suit: CardSuit): string {
 	return suit[0];
 }
 
-export function valueToCode(value: CardValue): string {
-	return typeof value === "number" ? String(value) : 
-		value === CardFace.JOKER ? "?" :
-		value[0].toUpperCase();
+export function rankToCode(rank: CardRank): string {
+	return typeof rank === "number" ? String(rank) : 
+		rank === CardFace.JOKER ? "?" :
+		rank[0].toUpperCase();
 }
 
 export interface FaceCard extends Card {
-	value: CardFace;
+	rank: CardFace;
 }
 
 export function isFaceCard(card: Card): card is FaceCard {
-	return card.value in CardFace;
+	return card.rank in CardFace;
 }
 
 export function cardName(card: Card): string {
-	return `${firstCap(String(card.value))} of ${firstCap(card.suit)}`;
+	return `${firstCap(String(card.rank))} of ${firstCap(card.suit)}`;
 }
 
 function firstCap(str: string): string {
@@ -96,7 +96,7 @@ function firstCap(str: string): string {
 }
 
 export function sameCard(a: Card, b: Card): boolean {
-	return a.suit === b.suit && a.value === b.value;
+	return a.suit === b.suit && a.rank === b.rank;
 }
 
 export function removeCard(cards: Cards, toRemove: Card): Cards {
@@ -111,7 +111,7 @@ export const suitToImage: Record<CardSuit, string> = {
 }
 
 export function cardToImage(card: Card): string {
-	return `images/cards/${String(card.value)}_of_${card.suit}.svg`.toLowerCase();
+	return `images/cards/${String(card.rank)}_of_${card.suit}.svg`.toLowerCase();
 }
 
 export const BACK_OF_CARD_IMAGE = "images/cards/card_back.svg";

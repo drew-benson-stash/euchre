@@ -1,4 +1,4 @@
-import { Card, CardSuit, suitToImage, valueToCode } from "../game/card-models";
+import { Card, CardSuit, suitToImage, rankToCode } from "../game/card-models";
 import styles from "./MiniCard.module.css";
 
 export interface MiniCardProps {
@@ -17,7 +17,7 @@ export function MiniCard(props: MiniCardProps) {
 
 	return (
 		<span className={styles.miniCard} style={{color: suitToColor[suit]}}>
-			{valueToCode(props.card.value)}
+			{rankToCode(props.card.rank)}
 			<img alt={suit} className={styles.miniSuit} src={suitToImage[suit]}></img>
 		</span>
 	)

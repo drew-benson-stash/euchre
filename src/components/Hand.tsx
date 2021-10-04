@@ -33,7 +33,7 @@ export function Hand(props: HandProps) {
 			{sorted.map((card, i) => {
 				const disabled = p.disabled || p.disableCard[i];
 				return (<Card
-					key={card.suit + card.value}
+					key={card.suit + card.rank}
 					card={card}
 					place={i * interval}
 					onClick={() => p.onCardClick(card)}

@@ -126,7 +126,7 @@ describe("game rules", () => {
 				...table.kitty,
 			] as Cards;
 
-			const strings = all.map(card => card?.suit + card.value);
+			const strings = all.map(card => card?.suit + card.rank);
 
 			strings.sort();
 
@@ -141,7 +141,7 @@ describe("game rules", () => {
 			expect(deck.length).toEqual(24);
 		});
 		it("creates no duplicates", () => {
-			const strings = deck.map(card => card?.suit + card.value);
+			const strings = deck.map(card => card?.suit + card.rank);
 
 			strings.sort();
 
@@ -259,28 +259,28 @@ describe("game rules", () => {
 		// it("scores non-trump non-lead number card", () => {
 		// 	const score = cardScore(newCard(CardSuit.SPADES, 9), CardSuit.CLUBS, CardSuit.HEARTS);
 
-		// 	expect(score).toEqual(card.value);
+		// 	expect(score).toEqual(card.rank);
 		// });
 		// it("scores non-trump lead number card", () => {
 		// 	const card = newCard(CardSuit.SPADES, 8);
 
 		// 	const score = cardScore(card, CardSuit.CLUBS, CardSuit.SPADES);
 
-		// 	expect(score).toEqual(card.value as number + 100);
+		// 	expect(score).toEqual(card.rank as number + 100);
 		// });
 		// it("scores trump lead number card", () => {
 		// 	const card = newCard(CardSuit.SPADES, 7);
 
 		// 	const score = cardScore(card, CardSuit.SPADES, CardSuit.SPADES);
 
-		// 	expect(score).toEqual(card.value as number + 100 + 1000);
+		// 	expect(score).toEqual(card.rank as number + 100 + 1000);
 		// });
 		// it("scores trump non-lead number card", () => {
 		// 	const card = newCard(CardSuit.SPADES, 6);
 
 		// 	const score = cardScore(card, CardSuit.SPADES, CardSuit.CLUBS);
 
-		// 	expect(score).toEqual(card.value as number + 1000);
+		// 	expect(score).toEqual(card.rank as number + 1000);
 		// });
 		// it("scores non-trump non-lead face card", () => {
 		// 	const card = newCard(CardSuit.SPADES, CardFace.QUEEN);

@@ -1,4 +1,4 @@
-import { newCard, Card, CardFace, Cards, CardSuit, CardValue, FaceCard, isFaceCard, sameCard } from "./card-models";
+import { newCard, Card, CardFace, Cards, CardSuit, CardRank, FaceCard, isFaceCard, sameCard } from "./card-models";
 import { initialTableState, Player, PlayerAction, Scores, TableState, Team, Trick } from "./game-state";
 
 const WINNING_SCORE = 2;
@@ -29,7 +29,7 @@ export function winningPlayer(trick: ReadonlyArray<PlayerAction>, trump?: CardSu
 	const leadSuit = isLeftBower(leadCard, trump) ? trump : leadCard.suit;
 	const sorted = cards.sort((a, b) => compareCards(a, b, trump, leadSuit));
 
-	// Last card has highest value, thus is the winner!
+	// Last card has highest rank, thus is the winner!
 	const winningCard = sorted[sorted.length - 1];
 
 	const winningPlay = trick.find(play => sameCard(winningCard, play.card));
@@ -45,7 +45,7 @@ export function sortCards(cards: Cards, trump?: CardSuit, lead?: CardSuit): Card
  * Compares the given cards using Euchre rules for trump and lead.
  * Returns +1 if A is the superior card, or -1 if B is superior.
  * 
- * If neither card is trump or lead, results will be based on value comparison alone.
+ * If neither card is trump or lead, results will be based on rank comparison alone.
  * This is technically inaccurate since in this condition results are indeterminate but should not matter in use.
  * 
  * @param a card A
@@ -89,7 +89,7 @@ function isLeadCard(card: Card, trump?: CardSuit, lead?: CardSuit): boolean {
 }
 
 /**
- * Scores each card based only on value, not considering suit
+ * Scores each card based only on rank, not considering suit
  * Trump cards are scored roughly the same as non-trump, but trump suit
  * orders the cards differently and includes the Left bower,
  * which is why this needs to have trump suit passed in
@@ -101,7 +101,7 @@ function isLeadCard(card: Card, trump?: CardSuit, lead?: CardSuit): boolean {
 function baseCardScore(card: Card, trump?: CardSuit): number {
 	const isTrump = isTrumpCard(card, trump);
 	const isLeft = isLeftBower(card, trump);
-	const score = isFaceCard(card) ? faceScore(card, isTrump) : card.value as number;
+	const score = isFaceCard(card) ? faceScore(card, isTrump) : card.rank as number;
 
 	// Left bower is scored one less than right bower
 	const leftBowerPenalty = isLeft ? -1 : 0;
@@ -109,7 +109,7 @@ function baseCardScore(card: Card, trump?: CardSuit): number {
 }
 
 function faceScore(card: FaceCard, isTrump = false): number {
-	return isTrump ? faceToNumberTrump[card.value] : faceToNumber[card.value];
+	return isTrump ? faceToNumberTrump[card.rank] : faceToNumber[card.rank];
 }
 
 /**
@@ -121,7 +121,7 @@ function faceScore(card: FaceCard, isTrump = false): number {
  * @returns true if `card` is the left bower
  */
 export function isLeftBower(card: Card, trump?: CardSuit): boolean {
-	return !!trump && (card.value === CardFace.JACK && card.suit === sameColor[trump]);
+	return !!trump && (card.rank === CardFace.JACK && card.suit === sameColor[trump]);
 }
 
 /**
@@ -133,7 +133,7 @@ export function isLeftBower(card: Card, trump?: CardSuit): boolean {
  * @returns true if `card` is the right bower
  */
 export function isRightBower(card: Card, trump?: CardSuit): boolean {
-	return card.value === CardFace.JACK && card.suit === trump;
+	return card.rank === CardFace.JACK && card.suit === trump;
 }
 
 /**
@@ -172,13 +172,13 @@ const sameColor: Record<CardSuit, CardSuit> = {
 	[CardSuit.HEARTS]: CardSuit.DIAMONDS,
 }
 
-const euchreCards: Array<CardValue> = [9, 10, CardFace.JACK, CardFace.QUEEN, CardFace.KING, CardFace.ACE];
+const euchreCards: Array<CardRank> = [9, 10, CardFace.JACK, CardFace.QUEEN, CardFace.KING, CardFace.ACE];
 
 /**
  * Standard Euchre deck of cards: 9, 10, Jack, Queen, King, and Ace of all four suits
  */
 export const deck: Cards = Object.keys(CardSuit).flatMap(suit => {
-	return euchreCards.map(value => newCard(suit as CardSuit, value));
+	return euchreCards.map(rank => newCard(suit as CardSuit, rank));
 });
 
 /**
