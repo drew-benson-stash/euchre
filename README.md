@@ -1,44 +1,35 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-## Available Scripts
+# Drew's Euchre
 
-In the project directory, you can run:
+If you're unfamiliar with the game of Euchre, <a href="https://en.wikipedia.org/wiki/Euchre"Wikipedia has a detailed explaination</a>.
+Since this website is created as a portfolio demo, you don't need to know the game well so included below is a condensed description of the game.
 
-### `yarn start`
+This web app is a demonstration only: since no one can hide their cards play would be pointless.
+That said, this implementation is complete and accurate with thorough rules for card ranking and scoring.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Euchre
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Euchre is a trick-taking card game with two teams of two players each.
+Each player is dealt a "hand" of 5 cards and given the chance to declare which suit will be "trump" and beat all other suits.
+Players then each play a card and the highest-ranking card played wins that "trick".
+The team with the most tricks earns a point, and the first team to 10 points wins!
+But there's a catch: if your team chose the trump suit and didn't win the most tricks,
+then you've been "euchred" and your opponents get two points!
 
-### `yarn test`
+Euchre is around 200 years old and popular in the American midwest and around the world.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+## Features
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Created using React for components, Redux for state management, and intro.js for user guidance.
+- Highly functional programming with totally immutable state
+- Unit tests for all game rules
+- Cards are dealt in the traditional manner (3-2-3-2-2-3-2-3) (this doesn't matter with a random shuffle but it was important to me.)
+- Cards in the kitty and completed tricks are shown using a "mini card" with just rank and suit to save space.
+- Cards automatically sort by trump, then traditional suit order, then rank including left and right bowers.
+- Pleasing animated transitions on hover over valid cards.
+- Player hands are displayd with cards splayed and overlapping, much as they would be in actual play.
+- Automatic scoring at the end of each round with consideration for who ordered up trump and being euchred.
+- Score cards displayed in the traditional format, with 4s and 6s overlapping so the number of pips showing indicates the team's score.
+- Flashy post-game card waterfall with pseudo-3D rotation effect accomplished entirely through CSS.
+- Fast-forward button (lower right corner) to automatically make next play to simplify demonstration.
