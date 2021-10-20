@@ -1,7 +1,7 @@
 
 # Drew's Euchre
 
-If you're unfamiliar with the game of Euchre, <a href="https://en.wikipedia.org/wiki/Euchre"Wikipedia has a detailed explaination</a>.
+If you're unfamiliar with the game of Euchre, [Wikipedia has a detailed explaination](https://en.wikipedia.org/wiki/Euchre).
 Since this website is created as a portfolio demo, you don't need to know the game well so included below is a condensed description of the game.
 
 This web app is a demonstration only: since no one can hide their cards play would be pointless.
