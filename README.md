@@ -1,6 +1,8 @@
 
 # Drew's Euchre
 
+[Try the deployed application](http://adbenson.net/portfolio/euchre)
+
 If you're unfamiliar with the game of Euchre, [Wikipedia has a detailed explaination](https://en.wikipedia.org/wiki/Euchre).
 Since this website is created as a portfolio demo, you don't need to know the game well so included below is a condensed description of the game.
 
