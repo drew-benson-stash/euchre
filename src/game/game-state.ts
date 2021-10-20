@@ -28,7 +28,7 @@ export interface Scores {
 }
 
 export enum GamePhase {
-	ADD_PLAYERS = "ADD_PLAYERS", // Get player names
+	INTRO = "INTRO", // Show the user the introduction text
 	DEAL = "DEAL", // Distribute deck to players and kitty
 	BID1 = "BID1", // Players may order up card to dealer
 	BID2 = "BID2", // Players may choose trump,
@@ -92,7 +92,7 @@ export const emptyHands: ReadonlyArray<Cards> = [
 ];
 
 export const initialState: GameState = {
-	phase: GamePhase.ADD_PLAYERS,
+	phase: GamePhase.INTRO,
 	players: [],
 	dealer: 0,
 	currentPlayer: 0,

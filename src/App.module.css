@@ -1,0 +1,24 @@
+.splashScreen {
+	height: 100%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+}
+
+.buttonContainer {
+	position: absolute;
+	top: 87%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.splashScreen button {
+	width: 124px;
+	height: 49px;
+	font-weight: bold;
+	font-size: 22px;
+	color: white;
+	background-color: rgba(0, 0, 0, 0.287);
+	border-radius: 8px;
+	margin: 10px;
+}
