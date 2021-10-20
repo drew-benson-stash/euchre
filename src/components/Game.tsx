@@ -18,13 +18,23 @@ export function Game() {
 
 	if (phase === GamePhase.ADD_PLAYERS) {
 		return (
-			<div className={styles.splashScreen} style={{backgroundImage: `url('images/splashscreen.png')`}}>
+			<div
+				className={styles.splashScreen}
+				style={{backgroundImage: `url('images/splashscreen.png')`}}
+			>
 				<button onClick={playerButtonHandler}>START</button>
 			</div>
 		);
 	} else {
 		return (
 			<div>
+				<a 
+					className={styles.sourceLink}
+					href="https://github.com/adbenson/euchre"
+					target="_blank"
+				>
+					github.com/adbenson/euchre
+				</a>
 				<Table></Table>
 			</div>
 		);

@@ -26,3 +26,13 @@ html, body, #root {
 	border-radius: 8px;
 	margin: 10px;
 }
+
+.sourceLink {
+	position: absolute;
+	z-index: 1;
+	color: white;
+	font-weight: bold;
+	font-size: 12px;
+	left: 50%;
+	transform: translate(-50%, 0);
+}
