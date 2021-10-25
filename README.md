@@ -16,6 +16,7 @@ That said, this implementation is complete and accurate with thorough rules for 
 - Code is written entirely in TypeScript with JSX with yarn for dependency management, and tests are written using jasmine.
 - Highly functional programming with totally immutable state
 - Unit tests for all game rules
+- Integration with randomuser.me API for player names
 - Cards are dealt in the traditional manner (3-2-3-2-2-3-2-3) (this doesn't matter with a random shuffle but it was important to me.)
 - Cards in the kitty and completed tricks are shown using a "mini card" with just rank and suit to save space.
 - Cards automatically sort by trump, then traditional suit order, then rank including left and right bowers.
