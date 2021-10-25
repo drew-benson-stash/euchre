@@ -12,7 +12,8 @@ That said, this implementation is complete and accurate with thorough rules for 
 
 ## Features
 
-- Created using React for components, Redux for state management, and intro.js for user guidance.
+- Created using React for components and Redux for state management.
+- Code is written entirely in TypeScript with JSX with yarn for dependency management, and tests are written using jasmine.
 - Highly functional programming with totally immutable state
 - Unit tests for all game rules
 - Cards are dealt in the traditional manner (3-2-3-2-2-3-2-3) (this doesn't matter with a random shuffle but it was important to me.)
