@@ -4,7 +4,7 @@ This app demonstrates proficiency with React and Redux as well as general modern
 
 [Try the deployed application](http://adbenson.net/portfolio/euchre)
 
-If you're unfamiliar with the game of Euchre, Wikipedia has a [detailed explaination](https://en.wikipedia.org/wiki/Euchre).
+If you're unfamiliar with the game of Euchre, Wikipedia has a [detailed explanation](https://en.wikipedia.org/wiki/Euchre).
 Since this website is created as a portfolio demo, you don't need to know the game well so included below is a [condensed description](#Euchre) of the game.
 
 This web app is a demonstration only: since no one can hide their cards play would be pointless.
